@@ -1,0 +1,27 @@
+{% extends '__layout.html' %}
+
+{% block body %}
+<!--Send this information to the route "obtain_post_info" using the post method-->
+<div style="margin-left: 10px;">
+<form action="/obtain_post_info" method = "post" style="width:500px;">
+    <div class="mb-3">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" name="post_title">
+    </div>
+
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name = "post_subject">
+        <option selected>Open this select menu</option>
+        <option value="MATH">MATH</option>
+        <option value="ENGLISH">ENGLISH</option>
+        <option value="OTHER">OTHER</option>
+    </select>
+
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Question</label>
+        <textarea class="form-control" id="post_body" name = "post_body"></textarea>
+    </div>
+
+    <button type="submit" class ="btn btn-primary">POST!</button>
+</div>
+</form>
+</div>
+{% endblock %}
