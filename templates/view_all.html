@@ -1,0 +1,11 @@
+{% extends '_layout.html' %}
+
+{% block body %}
+<p> 
+    {% for i in A %}
+        {% for x in i %}
+        <p>{{ x }}</p>
+        {% endfor %}
+    {% endfor %}
+</p>
+{% endblock %}
