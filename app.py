@@ -24,7 +24,7 @@ def create():
 @app.post('/obtain_post_info')
 def add_post():
     # Obtain the neccessary information sent from the form
-    post_title = request.form.get('post_type')
+    post_title = request.form.get('post_title')
     post_body = request.form.get('post_body')
     post_subject = request.form.get('post_subject')
     tuple_data = (post_title, post_body, post_subject)

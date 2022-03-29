@@ -1,11 +1,31 @@
 {% extends '_layout.html' %}
-
+{% block css %}
+<style>
+   .post-container {
+           border:1px solid blue;
+           margin-left:10px;
+           width:50%;
+           margin-bottom:10px;
+    }
+    .post-text {
+        color:black;
+        margin-left:10px;
+    }
+    .inside-text {
+        width: fit-content;
+    }
+</style>
+{% endblock %}
 {% block body %}
 <p> 
     {% for i in all_posts %}
+    <div class = "post-container">
+        <div class = "inside-text">
         {% for x in i %}
-        <p>{{ x }}</p>
+        <p class = "post-text">{{ x }}</p>
         {% endfor %}
+        </div>
+    </div>
     {% endfor %}
 </p>
 {% endblock %}
