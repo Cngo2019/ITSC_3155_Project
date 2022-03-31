@@ -34,3 +34,10 @@ def add_post():
 @app.get('/view_all')
 def all_posts():
     return render_template('view_all.html', all_posts = temporary_singleton)
+
+
+@app.get('/account_creation')
+def account_creation():
+    return render_template('account_creation.html')
+
+    
