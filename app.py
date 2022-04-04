@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 
-#hello
+#hello - hi
 app = Flask(__name__)
 
 @app.get('/')
@@ -10,6 +10,7 @@ def home():
 @app.get('/login')
 def login():
     return render_template('login.html')
+# This should not be imported twice
 from flask import Flask, render_template, request, redirect
 
 # A temporary array to store our form information when creating a post.
@@ -24,6 +25,7 @@ def create():
 @app.post('/obtain_post_info')
 def add_post():
     # Obtain the neccessary information sent from the form
+    # Remember to add validation here
     post_title = request.form.get('post_type')
     post_body = request.form.get('post_body')
     post_subject = request.form.get('post_subject')
@@ -31,6 +33,7 @@ def add_post():
     # Just add it to the temporary structure
     temporary_singleton.append(tuple_data)
     return redirect('/view_all')
+# See if it would be better to follow the route naming conventions from the PPT
 # When going to the view_all page just simply render it.
 @app.get('/view_all')
 def all_posts():
