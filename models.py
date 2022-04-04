@@ -24,8 +24,9 @@ class Post(db.Model):
     subject = db.Column(db.String, nullable = False)
     main_text = db.Column(db.String, nullable = False)
 
+    #foreign key
     account_id = db.Column(db.Integer, db.ForeignKey('user.account_id'), nullable = False)
-    users = db.relationship('User', backref= 'poster')
+    user = db.relationship('User', backref= 'all_user_posts')
 
     def __repr__(self):
         return f'Post({self.date_time}, {self.title}, {self.subject}, {self.main_text})'
@@ -36,14 +37,15 @@ class Reply(db.Model):
     date_time = db.Column(db.Datetime, nullable = False, default=datetime.utcnow)
     text = db.Column(db.String, nullable = False)
 
+    #foreign keys
     post_id = db.Column(db.Integer, db.ForeignKey('post.post_id'), nullable = False)
-    posts = db.relationship('Post', backref='poster')
+    post = db.relationship('Post', backref='post_replies')
 
     account_id = db.Column(db.Integer, db.ForeignKey('user.account_id'), nullable = False)
-    users = db.relationship('User', backref='replier')
+    user = db.relationship('User', backref='all_user_replies')
 
     def __repr__(self):
-        return f'Reply({self.text})'
+        return f'Reply({self.date_time},{self.text})'
 
 
 
