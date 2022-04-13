@@ -18,7 +18,7 @@ class User(db.Model):
     account_id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String, nullable = False)
     email = db.Column(db.String, nullable = False)
-    user_password = db.Column(db.String, nullable = False)
+    password = db.Column(db.String, nullable = False)
     first_name = db.Column(db.String, nullable = False)
     last_name = db.Column(db.String, nullable = False)
 
