@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from xmlrpc.client import DateTime
 from datetime import datetime
 
 db = SQLAlchemy()
@@ -38,7 +39,7 @@ class User(db.Model):
 #post class
 class Post(db.Model):
     post_id = db.Column(db.Integer, primary_key = True)
-    date_time = db.Column(db.Datetime, nullable = False, default=datetime.utcnow)
+    date_time = db.Column(db.Datetime, nullable = False, default=DateTime.utcnow)
     title = db.Column(db.String, nullable = False)
     subject = db.Column(db.String, nullable = False)
     main_text = db.Column(db.String, nullable = False)
@@ -63,7 +64,7 @@ class Post(db.Model):
 #);
 class Reply(db.Model):
     reply_id = db.Column(db.Integer, primary_key = True)
-    date_time = db.Column(db.Datetime, nullable = False, default=datetime.utcnow)
+    date_time = db.Column(db.Datetime, nullable = False, default=DateTime.utcnow)
     main_text = db.Column(db.String, nullable = False)
 
     #foreign keys
