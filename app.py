@@ -2,13 +2,14 @@ from flask import Flask, render_template
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from sqlalchemy import false, true
 from models import User
 import os
 
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123@localhost:3306/homework_help'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
@@ -22,7 +23,6 @@ def home():
 @app.get('/login')
 def login():
     return render_template('login.html')
-from flask import Flask, render_template, request, redirect
 
 # A temporary array to store our form information when creating a post.
 temporary_singleton = []
@@ -61,7 +61,8 @@ def regisration():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
 
-    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
+    isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
+    if isAnyEmpty or User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return redirect('/fail.html')
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
@@ -78,3 +79,9 @@ def success():
 @app.get('/fail.html')
 def fail():
     return render_template('/fail.html')
+
+def inputEmpty(list_of_strings):
+    for i in list_of_strings:
+        if i == '':
+            return true
+    return false
