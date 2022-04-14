@@ -8,10 +8,10 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123@localhost:3306/homework_help'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
-app.config['SQLALCHEMY_DATABSE_URI'] = os.getenv('DATABSE_URL')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
 bcrypt.init_app(app)
@@ -67,4 +67,9 @@ def regisration():
 
     db.session.add(new_user)
     db.session.commit()
-    return redirect("success.html")
+    return redirect('/success.html')
+
+
+    @app.get('/success.html')
+    def success():
+        return render_template('/success.html')
