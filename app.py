@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
