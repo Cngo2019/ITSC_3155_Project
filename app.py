@@ -2,20 +2,19 @@ from flask import Flask, render_template
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from models import User
 import os
 
 load_dotenv()
-app = Flask(__name__)
-bcrypt = Bcrypt()
-bcrypt.init_app(app)
-#hello
-app = Flask(__name__)
 
+app = Flask(__name__)
+bcrypt = Bcrypt(app)
+db = SQLAlchemy(app)
 app.config['SQLALCHEMY_DATABSE_URI'] = os.getenv('DATABSE_URL')
-
-
-
-
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+#app.secret_key = os.getenv('SECRET_KEY')
+db.init_app(app)
+bcrypt.init_app(app)
 @app.get('/')
 def home():
     return render_template('home.html')
@@ -62,3 +61,10 @@ def regisration():
     first_name = request.form.get('first_name')
     last_name = request.form.get('last_name')
 
+    hashed_password = bcrypt.generate_password_hash(password)
+    new_user = User(username=username, 
+    password=hashed_password, email=email, first_name=first_name, last_name=last_name)
+
+    db.session.add(new_user)
+    db.session.commit()
+    return redirect("success.html")
