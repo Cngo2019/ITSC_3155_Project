@@ -1,7 +1,20 @@
 from flask import Flask, render_template
+from flask_bcrypt import Bcrypt
+from flask_sqlalchemy import SQLAlchemy
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+app = Flask(__name__)
+bcrypt = Bcrypt()
+bcrypt.init_app(app)
 #hello
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABSE_URI'] = os.getenv('DATABSE_URL')
+
+
+
 
 @app.get('/')
 def home():
@@ -41,4 +54,11 @@ def all_posts():
 def account_creation():
     return render_template('account_creation.html')
 
-    
+@app.post('/account_creation')
+def regisration():
+    username = request.form.get('username')
+    password = request.form.get('password')
+    email = request.form.get('email')
+    first_name = request.form.get('first_name')
+    last_name = request.form.get('last_name')
+
