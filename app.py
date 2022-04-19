@@ -67,6 +67,7 @@ def regisration():
 
     if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return redirect('/fail.html')
+        
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
