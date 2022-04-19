@@ -12,6 +12,7 @@ MarkupSafe==2.1.1
 mysql==0.0.3
 mysqlclient==2.1.0
 pycparser==2.21
+python-dotenv==0.20.0
 six==1.16.0
 SQLAlchemy==1.4.35
 Werkzeug==2.0.3
