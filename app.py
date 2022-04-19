@@ -62,7 +62,7 @@ def regisration():
     last_name = request.form.get('last_name')
 
     #isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
-    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
+    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first() or password == "":
         return redirect('/fail.html')
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
