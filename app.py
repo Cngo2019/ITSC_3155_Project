@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, abort
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -16,13 +16,42 @@ db = SQLAlchemy(app)
 #app.secret_key = os.getenv('SECRET_KEY')
 db.init_app(app)
 bcrypt.init_app(app)
+
+#home route
 @app.get('/')
 def home():
     return render_template('home.html')
-
+#login route
 @app.get('/login')
 def login():
     return render_template('login.html')
+
+#login session
+@app.post('/login')
+def logging_on():
+    username = request.form.get('username', '')
+    password = request.form.get('password', '')
+
+    if username == '' or password == '':
+        abort(400)
+    existing_user = User.query.filter_by(username=username).first()
+
+    if not existing_user or existing_user.user_id == 0:
+        return redirect('/fail-login')
+
+    if bcrypt.check_password_hash(existing_user.password, password):
+        return redirect('/success-login')
+    else:
+        return redirect('/fail-login')
+#login success
+@app.get('/success-login')
+def login_success():
+    return render_template('success-login.html')
+
+#login fail
+@app.get('/fail-login')
+def login_fail():
+    return render_template('fail-login.html')
 
 # A temporary array to store our form information when creating a post.
 temporary_singleton = []
@@ -63,22 +92,22 @@ def regisration():
 
     isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
     if isAnyEmpty or User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
-        return redirect('/fail.html')
+        return redirect('/fail-account')
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
     db.session.add(new_user)
     db.session.commit()
-    return redirect('/success.html')
+    return redirect('/success-account')
 
 
-@app.get('/success.html')
+@app.get('/success-account')
 def success():
-    return render_template('/success.html')
+    return render_template('/success-account.html')
 
-@app.get('/fail.html')
+@app.get('/fail-account')
 def fail():
-    return render_template('/fail.html')
+    return render_template('/fail-account.html')
 
 def inputEmpty(list_of_strings):
     for i in list_of_strings:
