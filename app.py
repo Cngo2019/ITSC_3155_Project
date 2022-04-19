@@ -55,14 +55,17 @@ def account_creation():
 
 @app.post('/account_creation')
 def regisration():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    email = request.form.get('email')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
+    username = request.form.get('username', "")
+    password = request.form.get('password', "")
+    email = request.form.get('email', "")
+    first_name = request.form.get('first_name', "")
+    last_name = request.form.get('last_name', "")
 
     #isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
-    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first() or password == "":
+    if first_name == "" or last_name == "" or password == "" or username == "":
+        return redirect('/fail.html')
+
+    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return redirect('/fail.html')
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
