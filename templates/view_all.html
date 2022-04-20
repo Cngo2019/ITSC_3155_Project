@@ -14,7 +14,16 @@
     .inside-text {
         width: fit-content;
     }
+    
+
 </style>
+{% endblock %}
+{% block nav %}
+<div class="d-flex align-items-center">
+    <form action="/logout" method="post">
+        <button type="submit" class = "btn btn-primary me-3">Logout</button>
+    </form>
+</div>
 {% endblock %}
 {% block body %}
 <p> 
