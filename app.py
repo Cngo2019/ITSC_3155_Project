@@ -103,15 +103,21 @@ def account_creation():
 
 @app.post('/account_creation')
 def regisration():
-    username = request.form.get('username')
-    password = request.form.get('password')
-    email = request.form.get('email')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-
+    # getting the information. Set to empty as default value
+    username = request.form.get('username', "")
+    password = request.form.get('password', "")
+    email = request.form.get('email', "")
+    first_name = request.form.get('first_name', "")
+    last_name = request.form.get('last_name', "")
+    
+    # If any of the fields are empty then redirect to an account fail
     #isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
-    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first() or password == "":
+    if first_name == "" or last_name == "" or password == "" or username == "" or email == "":
         return redirect('/fail-account')
+    # If any of the usernames OR emails are taken then redirect to fail
+    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
+        return redirect('/fail-account')
+    # Otherwise continue generating the hashed password
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
@@ -127,9 +133,3 @@ def success():
 @app.get('/fail-account')
 def fail():
     return render_template('/fail-account.html')
-
-def inputEmpty(list_of_strings):
-    for i in list_of_strings:
-        if i == '':
-            return true
-    return false
