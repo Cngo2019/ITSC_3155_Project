@@ -14,11 +14,12 @@
         font-size: 18px;
         padding-bottom: 15px;
     }
-    .email, .password {
+    .username, .password {
         font-size: 18px;
         margin-bottom: 4px;
         
     }
+
     
     
 </style>
@@ -26,28 +27,27 @@
 
 {% block nav %}
 <div class="d-flex align-items-center">
-    <a class = "btn btn-primary me-3" href = "/login">Sign Up</a> 
+    <a class = "btn btn-primary me-3" href = "/account_creation">Sign Up</a> 
 </div>
 {% endblock %}
 
 
 {% block body %}
 
-<form class="login">
+<form class="login" action="/login" method="post">
     <div class = "container" style="text-align: left;">
     <h1>Login</h1>
-    <h2>Don't have an account yet? <a href= "#">Sign Up</a></h2>
+    <h2>Don't have an account yet? <a href= "/account_creation">Sign Up</a></h2>
     
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="email">Email Address</label>
-      <input type="email" class="form-control" id="email" style="width: 25em;" >
-      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-    </div>
+      <label for ="username" class="username">Username</label>
+      <input type="username" name="username"class="form-control" id="username" style="width: 25em;" autocomplete="off" >
     <div class="mb-3">
-      <label for="exampleInputPassword1" class="password">Password</label>
-      <input type="password" class="form-control" id="password" style="width: 25em;">
+      <label for="password" class="password">Password</label>
+      <input type="password" name="password" class="form-control" id="password" style="width: 25em;" autocomplete="off">
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
+    
     </div>
   </form>
 
