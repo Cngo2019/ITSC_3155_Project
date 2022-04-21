@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, abort
+from flask import Flask, render_template, request, redirect, abort, session
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
@@ -11,15 +11,19 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.secret_key = os.getenv('SECRET_KEY')
+
 bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
-#app.secret_key = os.getenv('SECRET_KEY')
+
 db.init_app(app)
 bcrypt.init_app(app)
 
 #home route
 @app.get('/')
 def home():
+    if 'user' in session:
+        return redirect('/success-login')
     return render_template('home.html')
 #login route
 @app.get('/login')
@@ -29,29 +33,42 @@ def login():
 #login session
 @app.post('/login')
 def logging_on():
-    username = request.form.get('username', '')
-    password = request.form.get('password', '')
+    username = request.form.get('username','')
+    password = request.form.get('password','')
 
     if username == '' or password == '':
         abort(400)
+    
+
     existing_user = User.query.filter_by(username=username).first()
 
-    if not existing_user or existing_user.user_id == 0:
+    if not existing_user or existing_user.account_id == 0:
         return redirect('/fail-login')
 
-    if bcrypt.check_password_hash(existing_user.password, password):
-        return redirect('/success-login')
-    else:
+    if not bcrypt.check_password_hash(existing_user.password, password):
         return redirect('/fail-login')
+    session['user'] = username
+
+    return redirect('/success-login')
+        
 #login success
 @app.get('/success-login')
 def login_success():
-    return render_template('success-login.html')
+    if not 'user' in session:
+        abort(401)
+    return render_template('success-login.html', user=session['user'])
 
 #login fail
 @app.get('/fail-login')
 def login_fail():
     return render_template('fail-login.html')
+#logout post route
+@app.post('/logout')
+def logout():
+    if 'user' not in session:
+        abort(401)
+    del session['user']
+    return redirect('/')
 
 # A temporary array to store our form information when creating a post.
 temporary_singleton = []
@@ -80,10 +97,13 @@ def all_posts():
 
 @app.get('/account_creation')
 def account_creation():
+    if 'user' in session:
+        return redirect('/success-login')
     return render_template('account_creation.html')
 
 @app.post('/account_creation')
 def regisration():
+<<<<<<< HEAD
     username = request.form.get('username')
     password = request.form.get('password')
     email = request.form.get('email')
@@ -93,6 +113,23 @@ def regisration():
     #isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
     if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first() or password == "":
         return redirect('/fail.html')
+=======
+    # getting the information. Set to empty as default value
+    username = request.form.get('username', "")
+    password = request.form.get('password', "")
+    email = request.form.get('email', "")
+    first_name = request.form.get('first_name', "")
+    last_name = request.form.get('last_name', "")
+    
+    # If any of the fields are empty then redirect to an account fail
+    #isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
+    if first_name == "" or last_name == "" or password == "" or username == "" or email == "":
+        return redirect('/fail-account')
+    # If any of the usernames OR emails are taken then redirect to fail
+    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
+        return redirect('/fail-account')
+    # Otherwise continue generating the hashed password
+>>>>>>> 94e358b5a8ab802e43168739a362a1ab40e134f2
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
@@ -108,9 +145,3 @@ def success():
 @app.get('/fail-account')
 def fail():
     return render_template('/fail-account.html')
-
-def inputEmpty(list_of_strings):
-    for i in list_of_strings:
-        if i == '':
-            return true
-    return false
