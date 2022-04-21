@@ -39,7 +39,7 @@ class Post(db.Model):
     post_id = db.Column(db.Integer, primary_key = True)
     date_time = db.Column(db.DateTime, nullable = False, default=datetime.utcnow)
     title = db.Column(db.String, nullable = False)
-    subject = db.Column(db.String, nullable = False)
+    subject_tag = db.Column(db.String, nullable = False)
     main_text = db.Column(db.String, nullable = False)
 
     #foreign key
@@ -47,7 +47,7 @@ class Post(db.Model):
     user = db.relationship('User', backref= 'all_user_posts')
 
     def __repr__(self):
-        return f'Post({self.date_time}, {self.title}, {self.subject}, {self.main_text})'
+        return f'Post({self.date_time}, {self.title}, {self.subject_tag}, {self.main_text})'
 
 #reply class 
 
