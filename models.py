@@ -73,7 +73,7 @@ class Reply(db.Model):
     user = db.relationship('User', backref='all_user_replies')
 
     def __repr__(self):
-        return f'Reply({self.date_time},{self.text})'
+        return f'Reply({self.date_time},{self.main_text})'
 
 
 

@@ -175,24 +175,15 @@ def get_edit_post_form(post_id):
 
 @app.post('/post/<post_id>')
 def update_post(post_id):
-    # get the post to update
+    # Get the current post
     post_to_update = Post.query.get_or_404(post_id)
-    #print(post_to_update)
-    # get post title
-    post_title = request.form.get('post_title', '')
-    # main text
-    post_body = request.form.get('post_body', '')
-    # the post subject
-    post_subject = request.form.get('post_subject', 'OTHER')
-    #print(post_title)
-    #print(post_body)
-    #print(post_subject)
+    # Get the post title
+    post_title = request.form.get('post_title')
+    post_body = request.form.get('post_body')
+    post_subject = request.form.get('post_subject', post_to_update.subject_tag)
     post_to_update.title = post_title
     post_to_update.main_text = post_body
     post_to_update.subject_tag = post_subject
-   # print(post_title)
-   # print(post_subject)
-   # print(post_body)
 
     db.session.commit()
     return redirect(f'/post/{post_id}')

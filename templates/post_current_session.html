@@ -30,6 +30,7 @@
         <p> {{ post.title }}<p>
         <p> {{ post.main_text }}<p>
         <p> {{ post.date_time }}<p>
+        <p> Subject: {{ post.subject_tag }}</p>
         <p> Posted by user: {{ username }}</p>
         <button onclick ="location.href='/post/{{ post.post_id }}/edit';" class="btn btn-primary">Edit</button>
     </div>
