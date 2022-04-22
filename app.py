@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from sqlalchemy import false, true
-from models import User
+from models import User, Post
 import os
 
 load_dotenv()
@@ -47,7 +47,9 @@ def logging_on():
 
     if not bcrypt.check_password_hash(existing_user.password, password):
         return redirect('/fail-login')
-    session['user'] = username
+    session['user'] = {'username': username,
+                        'account_id': existing_user.account_id
+                      }
 
     return redirect('/success-login')
         
@@ -71,28 +73,44 @@ def logout():
     return redirect('/')
 
 # A temporary array to store our form information when creating a post.
-temporary_singleton = []
+# temporary_singleton = []
 # Go to the create page and create the HTML page
 @app.get('/create')
 def create():
+    if not 'user' in session:
+        return render_template('/login.html')
     return render_template('create.html')
 
 # After submitting the information to the obtain_post_info route, we can obtain
 # all the neccessary info
 @app.post('/obtain_post_info')
 def add_post():
+    if not 'user' in session:
+        abort(404)
     # Obtain the neccessary information sent from the form
+    # title
     post_title = request.form.get('post_title')
+    # main text
     post_body = request.form.get('post_body')
+    # the post subject
     post_subject = request.form.get('post_subject')
-    tuple_data = (post_title, post_body, post_subject)
+    
+    new_post = Post(
+    title=post_title, 
+    subject_tag=post_subject, 
+    main_text=post_body,
+    account_id=session['user']['account_id']
+    )
+
+    db.session.add(new_post)
+    db.session.commit()
     # Just add it to the temporary structure
-    temporary_singleton.append(tuple_data)
+    # temporary_singleton.append(tuple_data)
     return redirect('/view_all')
 # When going to the view_all page just simply render it.
 @app.get('/view_all')
 def all_posts():
-    return render_template('view_all.html', all_posts = temporary_singleton)
+    return render_template('view_all.html')
 
 
 @app.get('/account_creation')
