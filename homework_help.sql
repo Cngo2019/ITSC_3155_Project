@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS reply (
     main_text VARCHAR(255) NOT NULL,
     post_id INT NOT NULL,
     account_id INT NOT NULL,
+    date_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (reply_id),
     FOREIGN KEY(post_id) REFERENCES post(post_id),
     FOREIGN KEY(account_id) REFERENCES app_user(account_id)
