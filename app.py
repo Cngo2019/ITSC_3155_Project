@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from sqlalchemy import false, true
-from models import User
+from models import User, db
 import os
 
 load_dotenv()
@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY')
 
 bcrypt = Bcrypt(app)
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
 db.init_app(app)
 bcrypt.init_app(app)
@@ -118,7 +118,7 @@ def regisration():
     if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return redirect('/fail-account')
     # Otherwise continue generating the hashed password
-    hashed_password = bcrypt.generate_password_hash(password)
+    hashed_password = bcrypt.generate_password_hash(password) #Should .decode('utf-8') be appended? 
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
     db.session.add(new_user)
@@ -133,3 +133,13 @@ def success():
 @app.get('/fail-account')
 def fail():
     return render_template('/fail-account.html')
+
+@app.get('/my_account')
+def my_account():
+    
+    current_user = User.query.filter_by(username=session['user']).first()
+    first = current_user.first_name
+    last = current_user.last_name
+
+    return render_template("/my_account.html", current_user = current_user)
+    #user will allow for user of current_user.first_name in jinga
