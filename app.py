@@ -47,9 +47,7 @@ def logging_on():
 
     if not bcrypt.check_password_hash(existing_user.password, password):
         return redirect('/fail-login')
-    session['user'] = {'username': username,
-                        'account_id': existing_user.account_id
-                      }
+    session['user'] = username
 
     return redirect('/success-login')
         
@@ -95,11 +93,14 @@ def add_post():
     # the post subject
     post_subject = request.form.get('post_subject')
     
+    # Get the account id
+
+    user_account_id = User.query.filter_by(username=session['user']).first().account_id
     new_post = Post(
     title=post_title, 
     subject_tag=post_subject, 
     main_text=post_body,
-    account_id=session['user']['account_id']
+    account_id=user_account_id
     )
 
     db.session.add(new_post)
@@ -156,13 +157,38 @@ def fail():
 @app.get('/post/<post_id>')
 def view_post(post_id):
     # grab the post we are viewing
-    current_post = Post.query.filter_by(post_id=post_id).first()
+    current_post = Post.query.get_or_404(post_id)
     print(current_post)
-    # Grab the user's name
+    # Grab the user's name and the ID
     current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
 
-    if 'user' in session and session['user']['account_id'] == current_post_account_id and session['user']['username'] == current_post_username:
-        return render_template('post_session.html', post=current_post, username=current_post_username)
+    if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
+        return render_template('post_current_session.html', post=current_post, username=current_post_username)
 
     return render_template('post.html', post=current_post, username=current_post_username)
+
+@app.get('/post/<post_id>/edit')
+def get_edit_post_form(post_id):
+    post_to_update = Post.query.get_or_404(post_id)
+    return render_template('edit_post_form.html', post=post_to_update)
+
+@app.post('/post/<post_id>')
+def update_post(post_id):
+    # get the post to update
+    post_to_update = Post.query.get_or_404(post_id)
+    #print(post_to_update)
+    # get post title
+    post_title = request.form.get('post_title', '')
+    # main text
+    post_body = request.form.get('post_body', '')
+    # the post subject
+    post_subject = request.form.get('post_subject', 'OTHER')
+    #print(post_title)
+    #print(post_body)
+    #print(post_subject)
+    post_to_update.title = post_title
+    post_to_update.main_text = post_body
+    post_to_update.subject_tag = post_subject
+    db.session.commit()
+    return redirect(f'/post/{post_id}')

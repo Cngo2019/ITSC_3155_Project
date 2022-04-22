@@ -31,6 +31,6 @@
         <p> {{ post.main_text }}<p>
         <p> {{ post.date_time }}<p>
         <p> Posted by user: {{ username }}</p>
-        <button onclick ="location.href='post/edit/{{ post.post_id }}';" class="btn btn-primary">Edit</button>
+        <button onclick ="location.href='/post/{{ post.post_id }}/edit';" class="btn btn-primary">Edit</button>
     </div>
 {% endblock %}
