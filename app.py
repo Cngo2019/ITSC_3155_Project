@@ -187,3 +187,11 @@ def update_post(post_id):
 
     db.session.commit()
     return redirect(f'/post/{post_id}')
+
+
+@app.post('/post/<post_id>/delete')
+def delete_post(post_id):
+    post_to_delete = Post.query.get_or_404(post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect('/view_all')
