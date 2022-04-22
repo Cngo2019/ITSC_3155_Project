@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from sqlalchemy import false, true
-from models import User, Post
+from models import User, Post, db
 import os
 
 load_dotenv()
@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY')
 
 bcrypt = Bcrypt(app)
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
 db.init_app(app)
 bcrypt.init_app(app)
@@ -190,5 +190,9 @@ def update_post(post_id):
     post_to_update.title = post_title
     post_to_update.main_text = post_body
     post_to_update.subject_tag = post_subject
+   # print(post_title)
+   # print(post_subject)
+   # print(post_body)
+
     db.session.commit()
     return redirect(f'/post/{post_id}')
