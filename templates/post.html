@@ -26,19 +26,10 @@
 </div>
 {% endblock %}
 {% block body %}
-<p> 
-    {% for current_post in all_posts %}
     <div class = "post-container">
-        <div class = "inside-text">
-        <p>{{ current_post.title }}</p>
-        <p>{{ current_post.main_text }}</p>
-        <p>{{ current_post.subject_tag }}</p>
-        </div>
-        <button type="reply" class="btn btn-primary">Reply</button>
-        <button onclick ="location.href='post/{{ current_post.post_id }}';" class="btn btn-primary">View</button>
+        <p> {{ post.title }}<p>
+        <p> {{ post.main_text }}<p>
+        <p> {{ post.date_time }}<p>
+        <p> Posted by user: {{ username }}</p>
     </div>
-    {% endfor %}
-
- 
-</p>
 {% endblock %}

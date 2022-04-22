@@ -110,7 +110,8 @@ def add_post():
 # When going to the view_all page just simply render it.
 @app.get('/view_all')
 def all_posts():
-    return render_template('view_all.html')
+    all_posts = Post.query.all()
+    return render_template('view_all.html', all_posts=all_posts)
 
 
 @app.get('/account_creation')
@@ -151,3 +152,17 @@ def success():
 @app.get('/fail-account')
 def fail():
     return render_template('/fail-account.html')
+
+@app.get('/post/<post_id>')
+def view_post(post_id):
+    # grab the post we are viewing
+    current_post = Post.query.filter_by(post_id=post_id).first()
+    print(current_post)
+    # Grab the user's name
+    current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
+    current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
+
+    if 'user' in session and session['user']['account_id'] == current_post_account_id and session['user']['username'] == current_post_username:
+        return render_template('post_session.html', post=current_post, username=current_post_username)
+
+    return render_template('post.html', post=current_post, username=current_post_username)
