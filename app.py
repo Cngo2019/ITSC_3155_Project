@@ -103,17 +103,6 @@ def account_creation():
 
 @app.post('/account_creation')
 def regisration():
-<<<<<<< HEAD
-    username = request.form.get('username')
-    password = request.form.get('password')
-    email = request.form.get('email')
-    first_name = request.form.get('first_name')
-    last_name = request.form.get('last_name')
-
-    #isAnyEmpty = inputEmpty([username, password, email, first_name, last_name])
-    if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first() or password == "":
-        return redirect('/fail.html')
-=======
     # getting the information. Set to empty as default value
     username = request.form.get('username', "")
     password = request.form.get('password', "")
@@ -129,7 +118,6 @@ def regisration():
     if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return redirect('/fail-account')
     # Otherwise continue generating the hashed password
->>>>>>> 94e358b5a8ab802e43168739a362a1ab40e134f2
     hashed_password = bcrypt.generate_password_hash(password)
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
