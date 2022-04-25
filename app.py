@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from sqlalchemy import false, true
-from models import User
+from models import User, Post, db
 import os
 
 load_dotenv()
@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY')
 
 bcrypt = Bcrypt(app)
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
 
 db.init_app(app)
 bcrypt.init_app(app)
@@ -71,28 +71,48 @@ def logout():
     return redirect('/')
 
 # A temporary array to store our form information when creating a post.
-temporary_singleton = []
+# temporary_singleton = []
 # Go to the create page and create the HTML page
 @app.get('/create')
 def create():
+    if not 'user' in session:
+        return render_template('/login.html')
     return render_template('create.html')
 
 # After submitting the information to the obtain_post_info route, we can obtain
 # all the neccessary info
 @app.post('/obtain_post_info')
 def add_post():
+    if not 'user' in session:
+        abort(404)
     # Obtain the neccessary information sent from the form
+    # title
     post_title = request.form.get('post_title')
+    # main text
     post_body = request.form.get('post_body')
+    # the post subject
     post_subject = request.form.get('post_subject')
-    tuple_data = (post_title, post_body, post_subject)
+    
+    # Get the account id
+
+    user_account_id = User.query.filter_by(username=session['user']).first().account_id
+    new_post = Post(
+    title=post_title, 
+    subject_tag=post_subject, 
+    main_text=post_body,
+    account_id=user_account_id
+    )
+
+    db.session.add(new_post)
+    db.session.commit()
     # Just add it to the temporary structure
-    temporary_singleton.append(tuple_data)
+    # temporary_singleton.append(tuple_data)
     return redirect('/view_all')
 # When going to the view_all page just simply render it.
 @app.get('/view_all')
 def all_posts():
-    return render_template('view_all.html', all_posts = temporary_singleton)
+    all_posts = Post.query.all()
+    return render_template('view_all.html', all_posts=all_posts)
 
 
 @app.get('/account_creation')
@@ -145,3 +165,45 @@ def success():
 @app.get('/fail-account')
 def fail():
     return render_template('/fail-account.html')
+
+@app.get('/post/<post_id>')
+def view_post(post_id):
+    # grab the post we are viewing
+    current_post = Post.query.get_or_404(post_id)
+    print(current_post)
+    # Grab the user's name and the ID
+    current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
+    current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
+
+    if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
+        return render_template('post_current_session.html', post=current_post, username=current_post_username)
+
+    return render_template('post.html', post=current_post, username=current_post_username)
+
+@app.get('/post/<post_id>/edit')
+def get_edit_post_form(post_id):
+    post_to_update = Post.query.get_or_404(post_id)
+    return render_template('edit_post_form.html', post=post_to_update)
+
+@app.post('/post/<post_id>')
+def update_post(post_id):
+    # Get the current post
+    post_to_update = Post.query.get_or_404(post_id)
+    # Get the post title
+    post_title = request.form.get('post_title')
+    post_body = request.form.get('post_body')
+    post_subject = request.form.get('post_subject', post_to_update.subject_tag)
+    post_to_update.title = post_title
+    post_to_update.main_text = post_body
+    post_to_update.subject_tag = post_subject
+
+    db.session.commit()
+    return redirect(f'/post/{post_id}')
+
+
+@app.post('/post/<post_id>/delete')
+def delete_post(post_id):
+    post_to_delete = Post.query.get_or_404(post_id)
+    db.session.delete(post_to_delete)
+    db.session.commit()
+    return redirect('/view_all')

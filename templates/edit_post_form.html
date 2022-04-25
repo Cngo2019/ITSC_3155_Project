@@ -1,0 +1,34 @@
+{% extends '_layout.html' %}
+{% block nav %}
+<div class="d-flex align-items-center">
+    <form action="/logout" method="post">
+        <button type="submit" class = "btn btn-primary me-3">Logout</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block body %}
+<!--Send this information to the route "obtain_post_info" using the post method-->
+<div style="margin-left: 10px;">
+<form action="/post/{{ post.post_id }}" method = "post" style="width:500px;">
+    <div class="mb-3">
+        <input class="form-control" type="text" placeholder="Default input" aria-label="default input example" name="post_title" id="post_title" value="{{ post.title }}">
+    </div>
+
+    <select class="form-select form-select-sm" aria-label=".form-select-sm example" name = "post_subject">
+        <option selected>No Subject</option>
+        <option value="MATH">MATH</option>
+        <option value="ENGLISH">ENGLISH</option>
+        <option value="OTHER">OTHER</option>
+    </select>
+
+    <div class="form-group">
+        <label for="exampleFormControlTextarea1">Question</label>
+        <textarea class="form-control" id="post_body" name = "post_body"> {{ post.main_text }} </textarea>
+    </div>
+
+    <button type="submit" class ="btn btn-primary">Update</button>
+</div>
+</form>
+</div>
+{% endblock %}
