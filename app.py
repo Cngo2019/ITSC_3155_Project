@@ -112,7 +112,9 @@ def add_post():
 @app.get('/view_all')
 def all_posts():
     all_posts = Post.query.all()
-    return render_template('view_all.html', all_posts=all_posts)
+    if 'user' in session:
+        return render_template('view_all.html', all_posts=all_posts)
+    return render_template('view_all_not_signed.html', all_posts=all_posts)
 
 
 @app.get('/account_creation')
@@ -158,14 +160,16 @@ def fail():
 def view_post(post_id):
     # grab the post we are viewing
     current_post = Post.query.get_or_404(post_id)
-    print(current_post)
     # Grab the user's name and the ID
     current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
-
+    # If the user is not in the session then load the post with the button on the top left saying "login"
+    if 'user' not in session:
+            return render_template('post_not_logged.html', post=current_post, username=current_post_username)
+    # If the user is in the session then check if this post is their post.
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
         return render_template('post_current_session.html', post=current_post, username=current_post_username)
-
+    # If the user is in the session but is not their post then load without the edit button
     return render_template('post.html', post=current_post, username=current_post_username)
 
 @app.get('/post/<post_id>/edit')
@@ -194,4 +198,5 @@ def delete_post(post_id):
     post_to_delete = Post.query.get_or_404(post_id)
     db.session.delete(post_to_delete)
     db.session.commit()
+    # redirect to view_all. Its okay to load with the button being "login" since the only way they can even delete is if they are in the session
     return redirect('/view_all')
