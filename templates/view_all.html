@@ -1,41 +1,77 @@
 {% extends '_layout.html' %}
 {% block css %}
 <style>
-   .post-container {
-        border:1px solid blue;
-        margin-left:10px;
-        width:50%;
-        margin-bottom:10px;
+    .btn-search {
+        margin-right: 2em;
+
     }
+    .btn-logout {
+        background-color: inherit;
+        border:none;
+        text-decoration: none;
+        cursor: pointer;
+        display:inline-block;
+        padding-left: 20px;
+        
+    }
+    .btn-logout:hover {
+        background-color: none;
+        
+    }
+    .post-container {
+        border: 1px solid blue;
+        margin-left: 10px;
+        width: 50%;
+        margin-bottom: 10px;
+    }
+
     .post-text {
-        color:black;
-        margin-left:10px;
+        color: black;
+        margin-left: 10px;
     }
+
     .inside-text {
         width: fit-content;
     }
-    
-
 </style>
 {% endblock %}
 {% block nav %}
-<div class="d-flex align-items-center">
-    <form action="/logout" method="post">
-        <button type="submit" class = "btn btn-primary me-3">Logout</button>
+<div class="search-bar">
+    <form class="d-flex">
+        <input class="form-control me-2" type="search" placeholder="Search for Question" aria-label="Search">
+        <button class="btn-search btn-outline-success" type="submit">Search</button>
     </form>
 </div>
+<div class="dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+        aria-expanded="false">{{user}}</a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li>
+            <hr class="dropdown-divider">
+        </li>
+        <li>
+            <form action="/logout" method="post">
+                <button type="submit" class="btn-logout me-3">Logout</button>
+            </form>
+        </li>
+    </ul>
+</div>
+
+
 {% endblock %}
 {% block body %}
-<p> 
+<p>
     {% for i in all_posts %}
-    <div class = "post-container">
-        <div class = "inside-text">
+<div class="post-container">
+    <div class="inside-text">
         {% for x in i %}
-        <p class = "post-text">{{ x }}</p>
+        <p class="post-text">{{ x }}</p>
         {% endfor %}
-        </div>
-        <button type="reply" class="btn btn-primary">Reply</button>
     </div>
-    {% endfor %}
+    <button type="reply" class="btn btn-primary">Reply</button>
+</div>
+{% endfor %}
 </p>
 {% endblock %}
