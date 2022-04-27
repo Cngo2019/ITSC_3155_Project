@@ -216,9 +216,28 @@ def edit_account():
     return render_template('edit_account.html', current_user=current_user)
 
 
-@app.get('/delete_account.html')
-def delete_account():
-    return render_template('delete_account.html')
+@app.get('/delete_account/<account_id>')
+def delete_account(account_id): #I need to pass the account id here.
+    print("Hello")
+
+    # Get all the posts associated with the account ID
+    #     delete them all
+    # then proceed
+    #
+
+    all_user_posts = Post.query.filter_by(account_id=account_id).all()
+    for post in all_user_posts:
+        db.session.delete(post)
+
+    account_to_delete = User.query.get_or_404(account_id)
+    
+    db.session.delete(account_to_delete)
+    db.session.commit()
+    if 'user' not in session:
+        abort(401)
+    del session['user']
+
+    return redirect("/login")
 
 @app.post('/account_updated')
 def account_edited():

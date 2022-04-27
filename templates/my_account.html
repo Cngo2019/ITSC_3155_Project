@@ -40,7 +40,7 @@
         location.href = "/edit_account.html";
     };
     document.getElementById("delete").onclick = function () {
-        location.href = "/delete_account.html";
+        location.href = "/delete_account/{{ current_user.account_id }}";
     };
 </script>
 {%endblock%}
