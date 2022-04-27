@@ -1,14 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>
-        {{ current_user.first_name }}
-    </p>
-</body>
-</html>
+{% extends '_layout.html' %}
+
+{%block body%}
+<div class = "container">
+    <h1>
+        {{current_user.first_name}} {{current_user.last_name}}
+    </h1>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 p-5">
+        <h2>Username</h2>
+        <p>{{current_user.username}}</p>
+    </div>
+    <div class="col-md-4 p-5">
+        <h2>Email</h2>
+        <p>{{current_user.email}}</p>
+    </div>
+    <div class="col-md-4 p-5">
+        <h2>User Posts</h2>
+        <a href="/user_posts.html">View Posts</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 p-5">
+        <button id="edit" type="button" class="btn btn-primary">Edit Account Info</button><br/></br>
+        <button id="delete" type="button" class="btn btn-danger">Delete Account</button>
+    </div>   
+</div>
+
+<div class="row">
+    <div class="col-md-6 p-5">
+        
+    </div>   
+</div>
+
+<script type = "text/javascript">
+    document.getElementById("edit").onclick = function () {
+        location.href = "/edit_account.html";
+    };
+    document.getElementById("delete").onclick = function () {
+        location.href = "/delete_account.html";
+    };
+</script>
+{%endblock%}

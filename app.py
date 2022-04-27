@@ -9,7 +9,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASEd_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY')
 
@@ -158,11 +158,10 @@ def fail():
 def my_account():
     
     current_user = User.query.filter_by(username=session['user']).first()
-    first = current_user.first_name
-    last = current_user.last_name
 
+    #user will allow for user of current_user.first_name in jinga   
     return render_template("/my_account.html", current_user = current_user)
-    #user will allow for user of current_user.first_name in jinga
+    
 @app.get('/post/<post_id>')
 def view_post(post_id):
     # grab the post we are viewing
@@ -204,3 +203,44 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect('/view_all')
+
+@app.get('/user_posts.html')
+def user_posts():
+    return render_template('user_posts.html')
+
+@app.get('/edit_account.html')
+def edit_account():
+    current_user = User.query.filter_by(username=session['user']).first()
+    return render_template('edit_account.html', current_user=current_user)
+
+
+@app.get('/delete_account.html')
+def delete_account():
+    return render_template('delete_account.html')
+
+@app.post('/account_updated')
+def account_edited():
+    #print(f'{account_id} is the account id')
+    if not 'user' in session:
+        abort(404)
+    # Obtain the neccessary information sent from the form
+    # title
+    username = request.form.get('edit_username')
+    # main text
+    email = request.form.get('edit_email')
+    
+    # Get the account id
+    print(username)
+    print(email)
+    user_account = User.query.filter_by(username=session['user']).first()
+    user_account.username = username
+    user_account.email = email
+
+    db.session.commit()
+    if 'user' not in session:
+        abort(401)
+    del session['user']
+
+    return redirect("/login") 
+
+#The  session dictionary was not updated. It must be updated 

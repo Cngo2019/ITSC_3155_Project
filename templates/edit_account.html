@@ -1,0 +1,33 @@
+{% extends '_layout.html' %}
+
+{%block body%}
+<div class="container">
+    <h1>Edit Account</h1>
+</div>
+
+<form action="/account_updated" method="post">
+<div class="row text-center">
+    <div class="col-md-4 p-5">
+        <h2>Edit Username</h2>
+        <input class="form-control" type="text" placeholder={{current_user.username}} name="edit_username" id="edit_username">    
+    </div>
+    <div class="col-md-4 p-5">
+        <h2>Edit Email</h2>
+        <input class="form-control" type="text" placeholder={{current_user.email}}  name="edit_email" id="edit_email"> 
+    </div>
+    <div class="col-md-4 p-5">
+        <h2>Edit Password</h2>
+        <input class="form-control" type="text" placeholder=""  name="edit_password" id="edit_password">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 p-5">
+        <button type="submit" class="btn btn-primary">Edit</button><br/></br>
+    </div>   
+</div>
+
+</form>
+
+
+{%endblock%}
