@@ -157,10 +157,12 @@ def fail():
 @app.get('/my_account')
 def my_account():
     
-    current_user = User.query.filter_by(username=session['user']).first()
 
-    #user will allow for user of current_user.first_name in jinga   
-    return render_template("/my_account.html", current_user = current_user)
+    if 'user' in session:
+        current_user = User.query.filter_by(username=session['user']).first()
+        return render_template('my_account.html', current_user=current_user)
+    else:
+        return redirect('/account_creation')
     
 @app.get('/post/<post_id>')
 def view_post(post_id):
@@ -228,6 +230,9 @@ def account_edited():
     username = request.form.get('edit_username')
     # main text
     email = request.form.get('edit_email')
+
+    #retrieve the password from the form 
+    password = request.form.get('edit_password')
     
     # Get the account id
     print(username)
@@ -235,8 +240,10 @@ def account_edited():
     user_account = User.query.filter_by(username=session['user']).first()
     user_account.username = username
     user_account.email = email
+    user_account.password = bcrypt.generate_password_hash(password)
 
     db.session.commit()
+
     if 'user' not in session:
         abort(401)
     del session['user']
