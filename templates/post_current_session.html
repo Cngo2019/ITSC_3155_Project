@@ -33,11 +33,11 @@
         <p> Subject: {{ post.subject_tag }}</p>
         <p> Posted by user: {{ username }}</p>
         <button onclick ="location.href='/post/{{ post.post_id }}/edit';" class="btn btn-primary">Edit</button>
-    </div>
-    <div class = "post-container">
+        <div style='margin-top:10px;'>
         <form action = "/post/{{ post.post_id }}/delete" method="post">
-        <button class="btn btn-primary">Delete</button>
-    </form>
+            <button class="btn btn-primary">Delete</button>
+        </form>
+        </div>
     </div>
     
 {% endblock %}
