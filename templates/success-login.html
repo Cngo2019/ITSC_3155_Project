@@ -1,4 +1,4 @@
-{% extends '_layout.html' %}
+{% extends '_loggedinlayout.html' %}
 
 {% block css %}
 <style>
@@ -7,18 +7,14 @@
 
 {% endblock %}
 {% block nav %}
-<div class="d-flex align-items-center">
-    <form action="/logout" method="post">
-        <button type="submit" class = "btn btn-primary me-3">Logout</button>
-    </form>
-</div>
+
 {% endblock %}
 
 
 
 {% block body %}
 
-<h1>You are successfully logged in, {{ user }}<a href ="/view_all"> Navigate</a></h1>
+<h1>You are successfully logged in, {{ user }}<a href ="/view_all">Navigate</a></h1>
 
 
 

@@ -1,0 +1,77 @@
+{% extends '_loggedinlayout.html' %}
+
+{% block css %}
+
+<style>
+    img {
+        background-repeat:no-repeat;
+        background-size: cover;
+        width:100%;
+        margin:0;
+        padding:0;
+    }
+    .welcome-container {
+        width: 50rem;
+        height: 15rem;
+        background: rgb(185, 185, 185);
+        color: rgb(0, 0, 0);
+        top: 15%;
+        left: 20%;
+        position: absolute;
+        padding: 30px 30px 30px 30px;
+        border-radius: 25px;
+        
+        
+    }
+    .welcome-container h1 {
+        text-align: center;
+    }
+    .welcome-container p {
+        font-size: 25px;
+        text-align: center;
+    }
+    .welcome-container .search input {
+        width: 30rem;
+        margin-left:130px;
+        
+    }
+    .btns .btn-search {
+        margin-left: 16rem;
+        margin-top: .5rem;
+        
+    }
+    .btns .btn-post {
+        margin-top: .5rem;
+    }
+
+</style>
+
+{% endblock %}
+
+
+
+
+
+
+{% block body %}
+
+<div class="container">
+    <img src="{{url_for('static', filename='welcome-home.jpg')}}" alt="bg">
+    <div class="welcome-container">
+        <form class="search">
+            <h1>Welcome, {{ user }}</h1>
+            <p>Knowledge is a click away.</p>
+            <input type="search" name="search" class="form-control" id="search" autocomplete="off">
+            <div class="btns " role="group" aria-label="Basic example">
+                <button type="button" class="btn-search btn btn-primary">Search</button>
+                <a href="/create"type="button" class="btn-post btn btn-primary">Post a Question</a>
+                
+              </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+{% endblock %}

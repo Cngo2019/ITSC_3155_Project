@@ -2,19 +2,35 @@
 
 {% block css %}
 <style>
+    .bg {
+        background-image: url("{{url_for('static', filename='home-person.jpg')}}");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        height: 45rem;
+        
+
+    }
+
+
     .home-container h1 {
         padding-top: 4em;
-        padding-left:690px;
-        font-size: 3rem;
-    }
-    .home-container h2 {
-        
         padding-left: 690px;
+        font-size: 3rem;
+        color:white;
     }
+
+    .home-container h2 {
+
+        padding-left: 690px;
+        color:white;
+    }
+
     .home-container button {
-        margin-left:690px;
+        margin-left: 690px;
         margin-top: 1em;
     }
+
     .signup-btn {
         border-radius: 8px;
         padding: 10px 28px;
@@ -23,30 +39,32 @@
         border: none;
         color: white;
         font-size: 18px;
-        
+
     }
+
     .signup-btn:hover {
         background-color: #0065fc;
     }
-
 </style>
 {% endblock %}
 
 {% block nav %}
 <div class="d-flex align-items-center">
-    <a class = "btn btn-primary me-3" href = "/login">Login</a> 
+    <a class="btn btn-primary me-3" href="/login">Login</a>
 </div>
 
 {% endblock %}
 
 {% block body %}
 
-<div class = "bg">
+
+
+<div class="bg">
     <div class="home-container">
         <h1>Be better, learn better</h1>
         <h2>Access to materials with expert support</h2>
-        <button onclick ="location.href='/account_creation';" type = "submit" class="signup-btn">Sign Up</button> 
-     </div>
+        <button onclick="location.href='/account_creation';" type="submit" class="signup-btn">Sign Up</button>
+    </div>
 </div>
 
 
