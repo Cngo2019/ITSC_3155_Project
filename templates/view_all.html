@@ -1,41 +1,55 @@
-{% extends '_layout.html' %}
+{% extends '_loggedinlayout.html' %}
 {% block css %}
 <style>
-   .post-container {
-        border:1px solid blue;
-        margin-left:10px;
-        width:50%;
-        margin-bottom:10px;
+    
+    .post-container .btn-reply {
+        margin-right: 2em;
+        margin-top: 2em;
+
     }
+    .post-container .btn-view {
+        margin-top: 2em;
+
+    } 
+    .post-container {
+        background:white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+
     .post-text {
-        color:black;
-        margin-left:10px;
+        color: black;
+        margin-left: 10px;
     }
+
     .inside-text {
         width: fit-content;
     }
-    
-
 </style>
 {% endblock %}
+
+
 {% block nav %}
-<div class="d-flex align-items-center">
-    <form action="/logout" method="post">
-        <button type="submit" class = "btn btn-primary me-3">Logout</button>
-    </form>
-</div>
+
 {% endblock %}
+
+
 {% block body %}
 <p> 
     {% for current_post in all_posts %}
     <div class = "post-container">
         <div class = "inside-text">
-        <p>{{ current_post.title }}</p>
-        <p>{{ current_post.main_text }}</p>
-        <p>{{ current_post.subject_tag }}</p>
+        <p>Subject: {{ current_post.subject_tag }}</p>
+        <p>Title: {{ current_post.title }}</p>
+        <p>Question: {{ current_post.main_text }}</p>
         </div>
-        <button type="reply" class="btn btn-primary">Reply</button>
-        <button onclick ="location.href='post/{{ current_post.post_id }}';" class="btn btn-primary">View</button>
+        <button type="reply" class="btn-reply btn btn-primary">Reply</button>
+        <button onclick ="location.href='post/{{ current_post.post_id }}';" class="btn-view btn btn-primary">View</button>
     </div>
     {% endfor %}
 

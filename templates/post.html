@@ -1,12 +1,7 @@
-{% extends '_layout.html' %}
+{% extends '_loggedinlayout.html' %}
 {% block css %}
 <style>
-   .post-container {
-        border:1px solid blue;
-        margin-left:10px;
-        width:50%;
-        margin-bottom:10px;
-    }
+   
     .post-text {
         color:black;
         margin-left:10px;
@@ -15,22 +10,30 @@
         width: fit-content;
     }
     
+    .post-container {
+        background:white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    
 
 </style>
 {% endblock %}
 {% block nav %}
-<div class="d-flex align-items-center">
-    <form action="/logout" method="post">
-        <button type="submit" class = "btn btn-primary me-3">Logout</button>
-    </form>
-</div>
+
 {% endblock %}
 {% block body %}
     <div class = "post-container">
-        <p> {{ post.title }}<p>
-        <p> {{ post.main_text }}<p>
-        <p> {{ post.date_time }}<p>
         <p> Subject: {{ post.subject_tag }}</p>
-        <p> Posted by user: {{ username }}</p>
+        <p> Title: {{ post.title }}<p>
+        <p> Question: {{ post.main_text }}<p>
+        <p> {{ post.date_time }}<p>
+        <p> Posted By: {{ username }}</p>
+        
     </div>
 {% endblock %}

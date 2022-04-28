@@ -1,41 +1,109 @@
 {% extends '_layout.html'%}
 
-{%block body%} 
+{% block css%}
+<style>
+    img {
+        background-size: cover;
+        background-position: center;
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width:100%;
+        object-fit: cover;
+        opacity: 0.6;
+    }
+    
 
-<div class="container">
-    <h1>Account Creation</h1>
+    .signup-container {
+        width: 475px;
+        height: 670px;
+        background: white;
+        color: black;
+        top: 15%;
+        left: 60%;
+        position: absolute;
+        padding: 30px 30px 30px 30px;
+        border-radius: 25px;
+
+    }
+    .signup h1 {
+        margin-bottom: 1rem;
+    }
+    .signup div input {
+        width: 25rem;
+    }
+    input[type='password'] {
+        font-family: Verdana;
+        letter-spacing: 0.125em;
+    }
+</style>
+{% endblock %}
+
+{% block nav %}
+<!--Nav bar login-->
+<div class="d-flex align-items-center">
+    <a class="btn btn-primary me-3" href="/login">Login</a>
 </div>
 
-<form action="/account_creation" method="post">
-<div class="container">
-    <label for="exampleFormControlInput1" class="form-label" >Enter Email address</label>
-    <input type="email" class="form-control" placeholder="" name = "email" id = "email">
+{% endblock %}
+
+{%block body%}
+<!--sign up container-->
+
+<div class="background-container">
+    <img src="{{url_for('static', filename='home-person.jpg')}}" alt="bg">
+    <div class="signup-container">
+
+        <form class="signup" action="/account_creation" method="post">
+            <h1>Sign Up</h1>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">First Name</label>
+                <input class="form-control" type="text" placeholder="" aria-label="default input example"
+                    name="first_name" id="first-name" autocomplete="off">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Last Name</label>
+                <input class="form-control" type="text" placeholder="" aria-label="default input example"
+                    name="last_name" id="last-name" autocomplete="off">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Email Address</label>
+                <input type="email" class="form-control" placeholder="" name="email" id="email">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Username</label>
+                <input class="form-control" type="text" placeholder="" aria-label="default input example"
+                    name="username" id="username" autocomplete="off">
+            </div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Password</label>
+                <input class="form-control" type="password" placeholder="" name="password" id="password" autocomplete="off">
+            </div>
+
+                <input type="checkbox" name="password" onclick="showPassword()">
+                <label for="password">Show Password</label>
+
+            <div class="mt-3 mb-3">
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
+
+        </form>
+    </div>
 </div>
 
-<div class="container">
-    <label for="exampleFormControlInput1" class="form-label">Enter password</label>
-    <input class="form-control" type = "text"  placeholder="" name = "password" id = "password">
-</div>
+<script>
+    //function to show user password
+    function showPassword(){
+        var x = document.getElementById('password');
 
-<div class="container">
-<label for="exampleFormControlInput1" class="form-label">Enter First Name</label>
-<input class="form-control" type="text" placeholder="" aria-label="default input example" name="first_name" id="last_name">
-</div>
+        if (x.type === "password")  {
+            x.type = "text";
 
-<div class="container">
-<label for="exampleFormControlInput1" class="form-label">Enter Last Name</label>
-<input class="form-control" type="text" placeholder="" aria-label="default input example" name="last_name" id="last_name">
-</div>
+        }
+        else {
+            x.type = "password";
+        }
+    }
+</script>
 
-<div class="container">
-<label for="exampleFormControlInput1" class="form-label">Enter Desired Username</label>
-<input class="form-control" type="text" placeholder="" aria-label="default input example" name="username" id="username">
-</div>
-
-<div class="container">    
-    <button type="submit" class="btn btn-primary">Submit</button>
-</div>
-
-</form>
-
-{%endblock%} 
+{%endblock%}
