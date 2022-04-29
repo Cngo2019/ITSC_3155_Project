@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from sqlalchemy import false, true
-from models import User, Post, db
+from models import User, Post, db, Reply
 import os
 
 load_dotenv()
@@ -176,10 +176,13 @@ def view_post(post_id):
     current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
 
+    # obtain all the posts that have post_id == post_id
+    associated_replies = Reply.query.filter_by(post_id=post_id).all()
+    # pass it into the render-template commands
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
-        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'])
-
-    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'])
+        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=associated_replies)
+    
+    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=associated_replies)
 
 @app.get('/post/<post_id>/edit')
 def get_edit_post_form(post_id):
@@ -208,3 +211,21 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect('/view_all')
+
+@app.get('/create-reply/<post_id>')
+def create_reply(post_id):
+    return render_template("create_reply.html", post_id=post_id)
+
+@app.post('/reply/<post_id>')
+def add_reply(post_id):
+    reply_body = request.form.get('reply_body')
+    account_id = User.query.filter_by(username=session['user']).first().account_id
+    new_reply = Reply(
+        main_text = reply_body,
+        post_id = post_id,
+        account_id = account_id
+    )
+
+    db.session.add(new_reply)
+    db.session.commit()
+    return redirect("/view_all")
