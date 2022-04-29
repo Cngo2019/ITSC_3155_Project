@@ -250,40 +250,60 @@ def delete_account(account_id): #I need to pass the account id here.
     db.session.delete(account_to_delete)
     db.session.commit()
 
+
+
     if 'user' not in session:
         abort(401)
     del session['user']
 
     return redirect("/login")
 
-@app.post('/account_updated')
+@app.get('/account_updated')
 def account_edited():
-    #print(f'{account_id} is the account id')
+    return redirect("/login") 
+
+@app.get('/unavailable')
+def unavailable():
+    return render_template('unavailable.html')
+
+@app.post('/username_updated')
+def username_updated():
     if not 'user' in session:
         abort(404)
-    # Obtain the neccessary information sent from the form
-    # title
-    username = request.form.get('edit_username')
-    # main text
-    email = request.form.get('edit_email')
-
-    #retrieve the password from the form 
-    password = request.form.get('edit_password')
-    
-    # Get the account id
-    print(username)
-    print(email)
-    user_account = User.query.filter_by(username=session['user']).first()
-    user_account.username = username
-    user_account.email = email
-    user_account.password = bcrypt.generate_password_hash(password)
-
+    current_user = User.query.filter_by(username=session['user']).first()
+    print(current_user)
+    username= request.form.get('edit_username')
+    if User.query.filter_by(username=username).first():
+        return redirect('/unavailable')
+    if username == '':
+        return redirect('/unavailable')
+    current_user.username = username
     db.session.commit()
+    return redirect('/account_updated')
 
-    if 'user' not in session:
-        abort(401)
-    del session['user']
+@app.post('/email_updated')
+def email_updated():
+    if not 'user' in session:
+        abort(404)
+    current_user = User.query.filter_by(username=session['user']).first()
+    email = request.form.get('edit_email')
+    if User.query.filter_by(email=email).first():
+        return redirect('/unavailable')
+    current_user.email = email
+    db.session.commit()
+    return redirect('/account_updated')
 
-    return redirect("/login") 
+@app.post('/password_updated')
+def password_updated():
+    if not 'user' in session:
+        abort(404)
+    current_user = User.query.filter_by(username=session['user']).first()
+    password = request.form.get('edit_password')
+    if password == "":
+        return redirect('/unavailable')
+    hashed_password = bcrypt.generate_password_hash(password)
+    current_user.password = hashed_password
+    db.session.commit()
+    return redirect('/account_updated')
 
 #The  session dictionary was not updated. It must be updated 
