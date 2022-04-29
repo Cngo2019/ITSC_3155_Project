@@ -35,7 +35,7 @@
         <p>{{ current_post.subject_tag }}</p>
         </div>
         <button type="reply" class="btn btn-primary">Reply</button>
-        <button onclick ="location.href='post/{{ current_post.post_id }}';" class="btn btn-primary">View</button>
+        <button onclick ="location.href='/post/{{ current_post.post_id }}';" class="btn btn-primary">View</button>
     </div>
     {% endfor %}
 

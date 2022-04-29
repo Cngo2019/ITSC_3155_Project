@@ -206,9 +206,11 @@ def delete_post(post_id):
     db.session.commit()
     return redirect('/view_all')
 
-@app.get('/user_posts.html')
-def user_posts():
-    return render_template('user_posts.html')
+@app.get('/user_posts/<account_id>')
+def user_posts(account_id):
+    ###
+    all_posts = Post.query.filter_by(account_id=account_id).all()
+    return render_template('view_all.html', all_posts=all_posts)
 
 @app.get('/edit_account.html')
 def edit_account():
@@ -228,11 +230,13 @@ def delete_account(account_id): #I need to pass the account id here.
     all_user_posts = Post.query.filter_by(account_id=account_id).all()
     for post in all_user_posts:
         db.session.delete(post)
-
+    
+    #TODO: do th same thing - delete all replies associated with the user
     account_to_delete = User.query.get_or_404(account_id)
     
     db.session.delete(account_to_delete)
     db.session.commit()
+
     if 'user' not in session:
         abort(401)
     del session['user']
