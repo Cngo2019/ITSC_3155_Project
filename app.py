@@ -272,7 +272,7 @@ def username_updated():
         abort(404)
     current_user = User.query.filter_by(username=session['user']).first()
     print(current_user)
-    username= request.form.get('edit_username')
+    username= request.form.get('edit_username',"")
     if User.query.filter_by(username=username).first():
         return redirect('/unavailable')
     if username == '':
@@ -286,8 +286,10 @@ def email_updated():
     if not 'user' in session:
         abort(404)
     current_user = User.query.filter_by(username=session['user']).first()
-    email = request.form.get('edit_email')
+    email = request.form.get('edit_email', "")
     if User.query.filter_by(email=email).first():
+        return redirect('/unavailable')
+    if email == '':
         return redirect('/unavailable')
     current_user.email = email
     db.session.commit()
