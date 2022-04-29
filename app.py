@@ -238,4 +238,9 @@ def add_reply(post_id):
 
     db.session.add(new_reply)
     db.session.commit()
-    return redirect(f"/post/{post_id}")
+    r    return redirect(f"/post/{post_id}")
+
+
+@app.get('/about')
+def about():
+    return render_template('/about.html')
