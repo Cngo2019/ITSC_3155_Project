@@ -3,7 +3,7 @@ from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 from sqlalchemy import false, true
-from models import User, Post, db
+from models import User, Post, db, Reply
 import os
 
 load_dotenv()
@@ -208,3 +208,21 @@ def delete_post(post_id):
     db.session.delete(post_to_delete)
     db.session.commit()
     return redirect('/view_all')
+
+@app.get('/create-reply/<post_id>')
+def create_reply(post_id):
+    return render_template("create_reply.html", post_id=post_id)
+
+@app.post('/reply/<post_id>')
+def add_reply(post_id):
+    reply_body = request.form.get('reply_body')
+    account_id = User.query.filter_by(username=session['user']).first().account_id
+    new_reply = Reply(
+        main_text = reply_body,
+        post_id = post_id,
+        account_id = account_id
+    )
+
+    db.session.add(new_reply)
+    db.session.commit()
+    return redirect("/view_all")
