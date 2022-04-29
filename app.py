@@ -238,7 +238,7 @@ def add_reply(post_id):
 
     db.session.add(new_reply)
     db.session.commit()
-    r    return redirect(f"/post/{post_id}")
+    return redirect(f"/post/{post_id}")
 
 
 @app.get('/about')
