@@ -238,4 +238,4 @@ def add_reply(post_id):
 
     db.session.add(new_reply)
     db.session.commit()
-    return redirect("/view_all")
+    return redirect(f"/post/{post_id}")
