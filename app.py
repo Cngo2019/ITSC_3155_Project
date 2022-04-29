@@ -25,6 +25,15 @@ def home():
     if 'user' in session:
         return redirect('/success-login')
     return render_template('home.html')
+
+#home page once logged in
+@app.get('/home')
+def loggedin_home():
+    return render_template('logged-in-home.html', user=session['user'])
+#user profile route
+@app.get('/profile')
+def profile():
+    return render_template('profile.html', user=session['user'])
 #login route
 @app.get('/login')
 def login():
@@ -36,17 +45,17 @@ def logging_on():
     username = request.form.get('username','')
     password = request.form.get('password','')
 
-    if username == '' or password == '':
-        abort(400)
+    
     
 
     existing_user = User.query.filter_by(username=username).first()
 
     if not existing_user or existing_user.account_id == 0:
-        return redirect('/fail-login')
+        return redirect('/login')
 
     if not bcrypt.check_password_hash(existing_user.password, password):
-        return redirect('/fail-login')
+        return redirect('/login')
+    
     session['user'] = username
 
     return redirect('/success-login')
@@ -56,7 +65,7 @@ def logging_on():
 def login_success():
     if not 'user' in session:
         abort(401)
-    return render_template('success-login.html', user=session['user'])
+    return render_template('logged-in-home.html', user=session['user'])
 
 #login fail
 @app.get('/fail-login')
@@ -77,7 +86,7 @@ def logout():
 def create():
     if not 'user' in session:
         return render_template('/login.html')
-    return render_template('create.html')
+    return render_template('create.html', user=session['user'])
 
 # After submitting the information to the obtain_post_info route, we can obtain
 # all the neccessary info
@@ -85,6 +94,7 @@ def create():
 def add_post():
     if not 'user' in session:
         abort(404)
+    
     # Obtain the neccessary information sent from the form
     # title
     post_title = request.form.get('post_title')
@@ -92,6 +102,9 @@ def add_post():
     post_body = request.form.get('post_body')
     # the post subject
     post_subject = request.form.get('post_subject')
+
+    if post_title == "" or post_body == "" or post_subject == "":
+        return redirect('/create')
     
     # Get the account id
 
@@ -112,7 +125,7 @@ def add_post():
 @app.get('/view_all')
 def all_posts():
     all_posts = Post.query.all()
-    return render_template('view_all.html', all_posts=all_posts)
+    return render_template('view_all.html', all_posts=all_posts, user=session['user'])
 
 
 @app.get('/account_creation')
@@ -122,7 +135,7 @@ def account_creation():
     return render_template('account_creation.html')
 
 @app.post('/account_creation')
-def regisration():
+def registration():
     # getting the information. Set to empty as default value
     username = request.form.get('username', "")
     password = request.form.get('password', "")
@@ -148,7 +161,7 @@ def regisration():
 
 @app.get('/success-account')
 def success():
-    return render_template('/success-account.html')
+    return render_template('/login.html')
 
 @app.get('/fail-account')
 def fail():
@@ -174,14 +187,14 @@ def view_post(post_id):
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
 
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
-        return render_template('post_current_session.html', post=current_post, username=current_post_username)
+        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'])
 
-    return render_template('post.html', post=current_post, username=current_post_username)
+    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'])
 
 @app.get('/post/<post_id>/edit')
 def get_edit_post_form(post_id):
     post_to_update = Post.query.get_or_404(post_id)
-    return render_template('edit_post_form.html', post=post_to_update)
+    return render_template('edit_post_form.html', post=post_to_update, user=session['user'])
 
 @app.post('/post/<post_id>')
 def update_post(post_id):

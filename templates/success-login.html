@@ -1,4 +1,4 @@
-{% extends '_layout.html' %}
+{% extends '_loggedinlayout.html' %}
 
 {% block css %}
 <style>
@@ -6,12 +6,15 @@
 </style>
 
 {% endblock %}
+{% block nav %}
+
+{% endblock %}
 
 
 
 {% block body %}
 
-<h1>You are successfully logged in, {{ user }}<a href ="/view_all"> Navigate</a></h1>
+<h1>You are successfully logged in, {{ user }}<a href ="/view_all">Navigate</a></h1>
 
 
 
