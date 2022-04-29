@@ -34,14 +34,13 @@
         <p> Question: {{ post.main_text }}<p>
         <p> {{ post.date_time }}<p>
         <p> Posted By: {{ username }}</p>
+        <button onclick ="location.href='/create-reply/{{ post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
     </div>
-
    
     {% for associated_reply in replies %}
     <div class= "post-container">
         <p> Text: {{ associated_reply.main_text }}</p>
-        <p> Post ID: {{ associated_reply.post_id }}</p>
-        <p> Account ID: {{ associated_reply.account_id }}</p>
+        <p> By User: {{ associated_reply.username }}</p>
     </div>
     {% endfor %}
 {% endblock %}

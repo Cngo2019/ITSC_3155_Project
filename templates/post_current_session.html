@@ -34,20 +34,21 @@
     <p> Question: {{ post.main_text }}</p>
     <p> {{ post.date_time }}</p>
     <p> Posted By: {{ username }}</p>
+    <button onclick ="location.href='/create-reply/{{ post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
+
     <button onclick="location.href='/post/{{ post.post_id }}/edit';" class="btn btn-primary">Edit</button>
 
 
-    <form action="/post/{{ post.post_id }}/delete" method="post">
-        <button class="btn btn-primary">Delete</button>
+    <form action="/post/{{ post.post_id }}/delete" method="post" style="margin-top:20px;">
+        <button class="btn btn-danger">Delete</button>
     </form>
 </div>
 
 
-    {% for associated_reply in replies %}
-    <div class="post-container">
+{% for associated_reply in replies %}
+<div class= "post-container">
     <p> Text: {{ associated_reply.main_text }}</p>
-    <p> Post ID: {{ associated_reply.post_id }}</p>
-    <p> Account ID: {{ associated_reply.account_id }}</p>
-    </div>
-    {% endfor %}
+    <p> By User: {{ associated_reply.username }}</p>
+</div>
+{% endfor %}
 {% endblock %}
