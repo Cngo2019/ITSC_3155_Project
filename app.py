@@ -177,12 +177,18 @@ def view_post(post_id):
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
 
     # obtain all the posts that have post_id == post_id
-    associated_replies = Reply.query.filter_by(post_id=post_id).all()
-    # pass it into the render-template commands
+    all_replies = Reply.query.filter_by(post_id=post_id).all()
+
+    reply_to_be_passed_in = []
+    for reply in all_replies:
+        reply_data = {}
+        reply_data['main_text'] = reply.main_text
+        reply_data['username'] = User.query.filter_by(account_id=reply.account_id).first().username
+        reply_to_be_passed_in.append(reply_data)
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
-        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=associated_replies)
+        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in)
     
-    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=associated_replies)
+    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in)
 
 @app.get('/post/<post_id>/edit')
 def get_edit_post_form(post_id):
@@ -207,6 +213,10 @@ def update_post(post_id):
 
 @app.post('/post/<post_id>/delete')
 def delete_post(post_id):
+    # Delete all replies associated with this post.
+    child_replies = Reply.query.filter_by(post_id=post_id).all()
+    for reply in child_replies:
+        db.session.delete(reply)
     post_to_delete = Post.query.get_or_404(post_id)
     db.session.delete(post_to_delete)
     db.session.commit()
