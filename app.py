@@ -246,18 +246,22 @@ def edit_account():
 
 @app.get('/delete_account/<account_id>')
 def delete_account(account_id): #I need to pass the account id here.
-    print("Hello")
+    #print("Hello")
 
     # Get all the posts associated with the account ID
     #     delete them all
     # then proceed
     #
-
+    all_user_replies = Reply.query.filter_by(account_id=account_id).all()
+    for reply in all_user_replies:
+        db.session.delete(reply)
+    
     all_user_posts = Post.query.filter_by(account_id=account_id).all()
     for post in all_user_posts:
         db.session.delete(post)
     
     #TODO: do th same thing - delete all replies associated with the user
+   
     account_to_delete = User.query.get_or_404(account_id)
     
     db.session.delete(account_to_delete)
