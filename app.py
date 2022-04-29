@@ -229,3 +229,7 @@ def add_reply(post_id):
     db.session.add(new_reply)
     db.session.commit()
     return redirect("/view_all")
+
+@app.get('/about')
+def about():
+    return render_template('/about.html')
