@@ -151,7 +151,7 @@ def registration():
     if User.query.filter_by(username=username).first() or User.query.filter_by(email=email).first():
         return redirect('/fail-account')
     # Otherwise continue generating the hashed password
-    hashed_password = bcrypt.generate_password_hash(password)
+    hashed_password = bcrypt.generate_password_hash(password) #Should .decode('utf-8') be appended? 
     new_user = User(username=username, 
     password=hashed_password, email=email, first_name=first_name, last_name=last_name)
     db.session.add(new_user)
@@ -167,6 +167,16 @@ def success():
 def fail():
     return render_template('/fail-account.html')
 
+@app.get('/my_account')
+def my_account():
+    
+
+    if 'user' in session:
+        current_user = User.query.filter_by(username=session['user']).first()
+        return render_template('my_account.html', current_user=current_user)
+    else:
+        return redirect('/account_creation')
+    
 @app.get('/post/<post_id>')
 def view_post(post_id):
     # grab the post we are viewing
@@ -222,6 +232,100 @@ def delete_post(post_id):
     db.session.commit()
     return redirect('/view_all')
 
+@app.get('/user_posts/<account_id>')
+def user_posts(account_id):
+    ###
+    all_posts = Post.query.filter_by(account_id=account_id).all()
+    return render_template('view_all.html', all_posts=all_posts)
+
+@app.get('/edit_account.html')
+def edit_account():
+    current_user = User.query.filter_by(username=session['user']).first()
+    return render_template('edit_account.html', current_user=current_user)
+
+
+@app.get('/delete_account/<account_id>')
+def delete_account(account_id): #I need to pass the account id here.
+    #print("Hello")
+
+    # Get all the posts associated with the account ID
+    #     delete them all
+    # then proceed
+    #
+    all_user_replies = Reply.query.filter_by(account_id=account_id).all()
+    for reply in all_user_replies:
+        db.session.delete(reply)
+    
+    all_user_posts = Post.query.filter_by(account_id=account_id).all()
+    for post in all_user_posts:
+        db.session.delete(post)
+    
+    #TODO: do th same thing - delete all replies associated with the user
+   
+    account_to_delete = User.query.get_or_404(account_id)
+    
+    db.session.delete(account_to_delete)
+    db.session.commit()
+
+
+
+    if 'user' not in session:
+        abort(401)
+    del session['user']
+
+    return redirect("/login")
+
+@app.get('/account_updated')
+def account_edited():
+    return redirect("/login") 
+
+@app.get('/unavailable')
+def unavailable():
+    return render_template('unavailable.html')
+
+@app.post('/username_updated')
+def username_updated():
+    if not 'user' in session:
+        abort(404)
+    current_user = User.query.filter_by(username=session['user']).first()
+    print(current_user)
+    username= request.form.get('edit_username',"")
+    if User.query.filter_by(username=username).first():
+        return redirect('/unavailable')
+    if username == '':
+        return redirect('/unavailable')
+    current_user.username = username
+    db.session.commit()
+    return redirect('/account_updated')
+
+@app.post('/email_updated')
+def email_updated():
+    if not 'user' in session:
+        abort(404)
+    current_user = User.query.filter_by(username=session['user']).first()
+    email = request.form.get('edit_email', "")
+    if User.query.filter_by(email=email).first():
+        return redirect('/unavailable')
+    if email == '':
+        return redirect('/unavailable')
+    current_user.email = email
+    db.session.commit()
+    return redirect('/account_updated')
+
+@app.post('/password_updated')
+def password_updated():
+    if not 'user' in session:
+        abort(404)
+    current_user = User.query.filter_by(username=session['user']).first()
+    password = request.form.get('edit_password')
+    if password == "":
+        return redirect('/unavailable')
+    hashed_password = bcrypt.generate_password_hash(password)
+    current_user.password = hashed_password
+    db.session.commit()
+    return redirect('/account_updated')
+
+#The  session dictionary was not updated. It must be updated 
 @app.get('/create-reply/<post_id>')
 def create_reply(post_id):
     return render_template("create_reply.html", post_id=post_id)
