@@ -42,4 +42,12 @@
     </form>
 </div>
 
+
+    {% for associated_reply in replies %}
+    <div class="post-container">
+    <p> Text: {{ associated_reply.main_text }}</p>
+    <p> Post ID: {{ associated_reply.post_id }}</p>
+    <p> Account ID: {{ associated_reply.account_id }}</p>
+    </div>
+    {% endfor %}
 {% endblock %}

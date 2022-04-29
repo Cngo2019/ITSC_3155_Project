@@ -176,10 +176,13 @@ def view_post(post_id):
     current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
 
+    # obtain all the posts that have post_id == post_id
+    associated_replies = Reply.query.filter_by(post_id=post_id).all()
+    # pass it into the render-template commands
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
-        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'])
-
-    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'])
+        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=associated_replies)
+    
+    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=associated_replies)
 
 @app.get('/post/<post_id>/edit')
 def get_edit_post_form(post_id):
