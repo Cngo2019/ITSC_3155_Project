@@ -399,7 +399,9 @@ def delete_reply(reply_id):
 @app.get('/my_replies/<post_id>')
 def view_replies_for_specific_post(post_id):
     my_replies = []
-    user_replies = Reply.query.filter_by(post_id=post_id).all()
+    # Get user's acc id
+    user_id = User.query.filter_by(username=session['user']).first().account_id
+    user_replies = Reply.query.filter_by(post_id=post_id).filter_by(account_id=user_id).all()
 
     for reply in user_replies:
         reply_info = dict()

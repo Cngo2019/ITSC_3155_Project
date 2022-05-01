@@ -44,8 +44,10 @@
     {% for reply in my_replies %}
     <div class = "post-container">
         <div class = "inside-text">
+        <b>
         <p>Post Title : {{ reply.post_title }}</p>
         <p>Post Question : {{ reply.post_question }}</p>
+        </b>
         <p>My Response: {{ reply.response }}</p>
         <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
 

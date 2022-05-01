@@ -28,19 +28,19 @@
 
 {% endblock %}
 {% block body %}
-
+{% if hasReplies == 1 %}
 <div class = "post-container">
-    {% if hasReplies == 1 %}
     <p> You have replies associated with this post! <a href="/my_replies/{{ post.post_id }}">Click here to view them</a> </p>
-    {% endif %}
 </div>
-
+{% endif %}
 <div class="post-container">
-    <p> Subject: {{ post.subject_tag }}</p>
-    <p> Title: {{ post.title }}</p>
-    <p> Question: {{ post.main_text }}</p>
-    <p> {{ post.date_time }}</p>
-    <p> Posted By: {{ username }}</p>
+    <b>
+        <p> Subject: {{ post.subject_tag }}</p>
+        <p> Title: {{ post.title }}<p>
+        <p> {{ post.date_time }}<p>
+        <p> Posted By: {{ username }}</p>
+        </b>
+        <p> Question: {{ post.main_text }}</p>
     <button onclick ="location.href='/create-reply/{{ post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
 
     <button onclick="location.href='/post/{{ post.post_id }}/edit';" class="btn btn-primary">Edit</button>
@@ -54,8 +54,8 @@
 
 {% for associated_reply in replies %}
 <div class= "post-container">
-    <p> Text: {{ associated_reply.main_text }}</p>
-    <p> By User: {{ associated_reply.username }}</p>
+    <p> <b>User {{ associated_reply.username }} responded with: </b> </p>
+    <p> {{ associated_reply.main_text }}</p>
 </div>
 {% endfor %}
 {% endblock %}
