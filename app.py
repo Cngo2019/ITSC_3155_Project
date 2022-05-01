@@ -414,3 +414,11 @@ def view_replies_for_specific_post(post_id):
         reply_info['reply_id'] = reply.reply_id
         my_replies.append(reply_info)
     return render_template("my_replies.html", my_replies = my_replies)
+
+@app.post('/post_search')
+def posts_by_title():
+    # This code was referenced from the SQLAlchemy flask assignment where we had to implement a function to search for movies -Can
+    movie_title = request.form.get('title')
+    title = f'%{movie_title}%'
+    all_posts = Post.query.filter(Post.title.ilike(title)).all()
+    return render_template('view_all.html', all_posts=all_posts, user=session['user'])
