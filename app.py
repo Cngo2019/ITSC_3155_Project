@@ -179,9 +179,10 @@ def my_account():
     
 @app.get('/post/<post_id>')
 def view_post(post_id):
+    hasReplies = 0
     # grab the post we are viewing
     current_post = Post.query.get_or_404(post_id)
-    print(current_post)
+    # print(current_post)
     # Grab the user's name and the ID
     current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
@@ -194,11 +195,14 @@ def view_post(post_id):
         reply_data = {}
         reply_data['main_text'] = reply.main_text
         reply_data['username'] = User.query.filter_by(account_id=reply.account_id).first().username
+        if reply.account_id == User.query.filter_by(username=session['user']).first().account_id:
+            hasReplies = 1
         reply_to_be_passed_in.append(reply_data)
+    print(hasReplies)
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
-        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in)
+        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in, hasReplies=hasReplies)
     
-    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in)
+    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in, hasReplies=hasReplies)
 
 @app.get('/post/<post_id>/edit')
 def get_edit_post_form(post_id):
@@ -259,9 +263,7 @@ def delete_account(account_id): #I need to pass the account id here.
     all_user_posts = Post.query.filter_by(account_id=account_id).all()
     for post in all_user_posts:
         db.session.delete(post)
-    
-    #TODO: do th same thing - delete all replies associated with the user
-   
+
     account_to_delete = User.query.get_or_404(account_id)
     
     db.session.delete(account_to_delete)
@@ -393,3 +395,20 @@ def delete_reply(reply_id):
     db.session.delete(reply_to_delete)
     db.session.commit()
     return redirect(f'/user_replies/{user_id}') 
+
+@app.get('/my_replies/<post_id>')
+def view_replies_for_specific_post(post_id):
+    my_replies = []
+    user_replies = Reply.query.filter_by(post_id=post_id).all()
+
+    for reply in user_replies:
+        reply_info = dict()
+        post_title = Post.query.filter_by(post_id=post_id).first().title
+        post_question = Post.query.filter_by(post_id=post_id).first().main_text
+        reply_info['post_title'] = post_title
+        reply_info['post_question'] = post_question
+        reply_info['response'] = reply.main_text
+        reply_info['date'] = reply.date_time
+        reply_info['reply_id'] = reply.reply_id
+        my_replies.append(reply_info)
+    return render_template("my_replies.html", my_replies = my_replies)

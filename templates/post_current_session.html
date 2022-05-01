@@ -28,6 +28,13 @@
 
 {% endblock %}
 {% block body %}
+
+<div class = "post-container">
+    {% if hasReplies == 1 %}
+    <p> You have replies associated with this post! <a href="/my_replies/{{ post.post_id }}">Click here to view them</a> </p>
+    {% endif %}
+</div>
+
 <div class="post-container">
     <p> Subject: {{ post.subject_tag }}</p>
     <p> Title: {{ post.title }}</p>
