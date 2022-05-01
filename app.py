@@ -179,9 +179,10 @@ def my_account():
     
 @app.get('/post/<post_id>')
 def view_post(post_id):
+    hasReplies = 0
     # grab the post we are viewing
     current_post = Post.query.get_or_404(post_id)
-    print(current_post)
+    # print(current_post)
     # Grab the user's name and the ID
     current_post_username = User.query.filter_by(account_id=current_post.account_id).first().username
     current_post_account_id = User.query.filter_by(account_id=current_post.account_id).first().account_id
@@ -194,11 +195,14 @@ def view_post(post_id):
         reply_data = {}
         reply_data['main_text'] = reply.main_text
         reply_data['username'] = User.query.filter_by(account_id=reply.account_id).first().username
+        if reply.account_id == User.query.filter_by(username=session['user']).first().account_id:
+            hasReplies = 1
         reply_to_be_passed_in.append(reply_data)
+    print(hasReplies)
     if 'user' in session and session['user'] == current_post_username and current_post.account_id == current_post_account_id:
-        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in)
+        return render_template('post_current_session.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in, hasReplies=hasReplies)
     
-    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in)
+    return render_template('post.html', post=current_post, username=current_post_username, user=session['user'], replies=reply_to_be_passed_in, hasReplies=hasReplies)
 
 @app.get('/post/<post_id>/edit')
 def get_edit_post_form(post_id):
@@ -256,12 +260,16 @@ def delete_account(account_id): #I need to pass the account id here.
     for reply in all_user_replies:
         db.session.delete(reply)
     
+    # Delete all the replies associated with this post
     all_user_posts = Post.query.filter_by(account_id=account_id).all()
     for post in all_user_posts:
+        # Since we are deleting a post, there are going to be orphaned replies.
+        # Go ahead and delete them
+        associated_replies = Reply.query.filter_by(post_id=post.post_id).all()
+        for reply in associated_replies:
+            db.session.delete(reply)
         db.session.delete(post)
-    
-    #TODO: do th same thing - delete all replies associated with the user
-   
+
     account_to_delete = User.query.get_or_404(account_id)
     
     db.session.delete(account_to_delete)
@@ -350,3 +358,87 @@ def add_reply(post_id):
 @app.get('/about')
 def about():
     return render_template('/about.html')
+
+@app.get('/user_replies/<account_id>')
+def load_replies(account_id):
+    all_replies = 1
+    # get user's account ID
+    account_id = User.query.filter_by(username=session['user']).first().account_id
+    my_replies = []
+    user_replies = Reply.query.filter_by(account_id=account_id).all()
+
+    for reply in user_replies:
+        reply_info = dict()
+        post_id = reply.post_id
+        post_title = Post.query.filter_by(post_id=post_id).first().title
+        post_question = Post.query.filter_by(post_id=post_id).first().main_text
+        reply_info['post_title'] = post_title
+        reply_info['post_question'] = post_question
+        reply_info['response'] = reply.main_text
+        reply_info['date'] = reply.date_time
+        reply_info['reply_id'] = reply.reply_id
+        reply_info['post_id'] = reply.post_id
+        my_replies.append(reply_info)
+    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies)
+
+@app.get('/reply/<reply_id>/edit')
+def edit_reply(reply_id):
+    current_reply = Reply.query.filter_by(reply_id=reply_id).first()
+    return render_template('edit_reply_form.html', reply=current_reply)
+
+@app.post('/reply/<reply_id>/edit')
+def update_reply(reply_id):
+    updated_text = request.form.get('reply_body')
+    current_reply = Reply.query.filter_by(reply_id=reply_id).first()
+    current_reply.main_text = updated_text
+    db.session.commit()
+
+    user_id = current_reply.account_id
+    return redirect(f'/user_replies/{user_id}')
+
+@app.post('/reply/<reply_id>/delete')
+def delete_reply(reply_id):
+    reply_to_delete = Reply.query.filter_by(reply_id=reply_id).first()
+    user_id = reply_to_delete.account_id
+    db.session.delete(reply_to_delete)
+    db.session.commit()
+    return redirect(f'/user_replies/{user_id}') 
+
+@app.get('/my_replies/<post_id>')
+def view_replies_for_specific_post(post_id):
+    all_replies = 0
+    my_replies = []
+    # Get user's acc id
+    user_id = User.query.filter_by(username=session['user']).first().account_id
+    user_replies = Reply.query.filter_by(post_id=post_id).filter_by(account_id=user_id).all()
+
+    for reply in user_replies:
+        reply_info = dict()
+        post_title = Post.query.filter_by(post_id=post_id).first().title
+        post_question = Post.query.filter_by(post_id=post_id).first().main_text
+        reply_info['post_title'] = post_title
+        reply_info['post_question'] = post_question
+        reply_info['response'] = reply.main_text
+        reply_info['date'] = reply.date_time
+        reply_info['reply_id'] = reply.reply_id
+        reply_info['post_id'] = reply.post_id
+        my_replies.append(reply_info)
+    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies)
+@app.get('/reply/<reply_id>')
+def view_reply(reply_id):
+    my_reply = Reply.query.filter_by(reply_id=reply_id).first()
+    return render_template("my_reply.html", reply=my_reply)
+
+
+@app.post('/post_search')
+def posts_by_title():
+    # This code was referenced from the SQLAlchemy flask assignment where we had to implement a function to search for movies -Can
+    # Obtain the movie title
+    post_title = request.form.get('title')
+    # pass this into the query (adding the percent signs appears to be reflect a regular expression)
+    title = f'%{post_title}%'
+    # query based on the title. As long as the title contains anything related to the 'title' string then let it be a search result.
+    all_posts = Post.query.filter(Post.title.ilike(title)).all()
+    if all_posts:
+        return render_template('view_all.html', all_posts=all_posts, user=session['user'])
+    return render_template('no_posts.html')

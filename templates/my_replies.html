@@ -1,0 +1,73 @@
+{% extends '_loggedinlayout.html' %}
+{% block css %}
+<style>
+    
+    .post-container .btn-reply {
+        margin-right: 2em;
+        margin-top: 2em;
+
+    }
+    .post-container .btn-view {
+        margin-top: 2em;
+
+    } 
+    .post-container {
+        background:white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+
+    .post-text {
+        color: black;
+        margin-left: 10px;
+    }
+
+    .inside-text {
+        width: fit-content;
+    }
+</style>
+{% endblock %}
+
+
+{% block nav %}
+
+{% endblock %}
+
+
+{% block body %}
+{% if all_replies == 1 %}
+<div class = "post-container">
+    <p> You are currently viewing ALL your replies </p>
+</div>
+{% else %}
+<div class = "post-container">
+    <p> You are currently viewing your replies associated with this post </p>
+</div>
+{% endif %}
+<p> 
+    {% for reply in my_replies %}
+    <div class = "post-container">
+        <div class = "inside-text">
+        <b>
+        <p> <a href="/post/{{reply.post_id}}">Post Title : {{ reply.post_title }}</a> </p>
+        <p>Post Question : {{ reply.post_question }}</p>
+        </b>
+        <p>My Response: {{ reply.response }}</p>
+        <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
+        <button onclick="location.href='/reply/{{ reply.reply_id }}';" class="btn btn-primary">View</button>
+
+    <form action="/reply/{{ reply.reply_id }}/delete" method="post" style="margin-top:20px;">
+        <button class="btn btn-danger">Delete</button>
+    </form>
+        </div>
+    </div>
+    {% endfor %}
+
+ 
+</p>
+{% endblock %}

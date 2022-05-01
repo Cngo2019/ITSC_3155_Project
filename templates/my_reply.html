@@ -41,19 +41,18 @@
 
 {% block body %}
 <p> 
-    {% for current_post in all_posts %}
     <div class = "post-container">
         <div class = "inside-text">
-        <b>
-        <p>Subject: {{ current_post.subject_tag }}</p>
-        <p>Title: {{ current_post.title }}</p>
-        </b>
-        <p> <b>Question: </b> {{ current_post.main_text }}</p>
+        <p>My Response: {{ reply.main_text }}</p>
+        <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
+        <button onclick="location.href='/reply/{{ reply.reply_id }}';" class="btn btn-primary">View</button>
+
+    <form action="/reply/{{ reply.reply_id }}/delete" method="post" style="margin-top:20px;">
+        <button class="btn btn-danger">Delete</button>
+    </form>
         </div>
-        <button onclick ="location.href='/create-reply/{{ current_post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
-        <button onclick ="location.href='/post/{{ current_post.post_id }}';" class="btn-view btn btn-primary">View</button>
     </div>
-    {% endfor %}
+
 
  
 </p>
