@@ -263,6 +263,8 @@ def delete_account(account_id): #I need to pass the account id here.
     # Delete all the replies associated with this post
     all_user_posts = Post.query.filter_by(account_id=account_id).all()
     for post in all_user_posts:
+        # Since we are deleting a post, there are going to be orphaned replies.
+        # Go ahead and delete them
         associated_replies = Reply.query.filter_by(post_id=post.post_id).all()
         for reply in associated_replies:
             db.session.delete(reply)
