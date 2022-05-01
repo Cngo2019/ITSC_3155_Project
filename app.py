@@ -350,3 +350,22 @@ def add_reply(post_id):
 @app.get('/about')
 def about():
     return render_template('/about.html')
+
+@app.get('/user_replies/<account_id>')
+def load_replies(account_id):
+    # get user's account ID
+    account_id = User.query.filter_by(username=session['user']).first().account_id
+    my_replies = []
+    user_replies = Reply.query.filter_by(account_id=account_id).all()
+
+    for reply in user_replies:
+        reply_info = dict()
+        post_id = reply.post_id
+        post_title = Post.query.filter_by(post_id=post_id).first().title
+        post_question = Post.query.filter_by(post_id=post_id).first().main_text
+        reply_info['post_title'] = post_title
+        reply_info['post_question'] = post_question
+        reply_info['response'] = reply.main_text
+        reply_info['date'] = reply.date_time
+        my_replies.append(reply_info)
+    return render_template("my_replies.html", my_replies = my_replies)
