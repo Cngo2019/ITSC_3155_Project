@@ -296,7 +296,8 @@ def username_updated():
         return redirect('/unavailable')
     current_user.username = username
     db.session.commit()
-    return redirect('/account_updated')
+    session['user'] = username
+    return redirect('/my_account')
 
 @app.post('/email_updated')
 def email_updated():
@@ -310,20 +311,21 @@ def email_updated():
         return redirect('/unavailable')
     current_user.email = email
     db.session.commit()
-    return redirect('/account_updated')
+    return redirect('/my_account')
 
 @app.post('/password_updated')
 def password_updated():
     if not 'user' in session:
         abort(404)
     current_user = User.query.filter_by(username=session['user']).first()
-    password = request.form.get('edit_password')
+    password = request.form.get('edit_password', "")
+    print(password)
     if password == "":
         return redirect('/unavailable')
     hashed_password = bcrypt.generate_password_hash(password)
     current_user.password = hashed_password
     db.session.commit()
-    return redirect('/account_updated')
+    return redirect('/my_account')
 
 #The  session dictionary was not updated. It must be updated 
 @app.get('/create-reply/<post_id>')
