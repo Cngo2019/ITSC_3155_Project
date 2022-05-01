@@ -47,6 +47,12 @@
         <p>Post Title : {{ reply.post_title }}</p>
         <p>Post Question : {{ reply.post_question }}</p>
         <p>My Response: {{ reply.response }}</p>
+        <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
+
+
+    <form action="/reply/{{ reply.reply_id }}/delete" method="post" style="margin-top:20px;">
+        <button class="btn btn-danger">Delete</button>
+    </form>
         </div>
     </div>
     {% endfor %}

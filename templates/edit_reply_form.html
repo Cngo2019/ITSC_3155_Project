@@ -1,0 +1,49 @@
+{% extends '_loggedinlayout.html' %}
+{% block css %}
+<style>
+    
+    .post-container .btn-post {
+        margin-top: 2em;
+    }
+
+    .post-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    .post-container .form-select {
+        height:2.7rem;
+
+    }
+
+    .post-container p{
+        font-size: 25px;
+    }
+    
+</style>
+{% endblock %}
+
+
+
+{% block body %}
+<!--Send this information to the route "obtain_post_info" using the post method-->
+<div class="post-container" >
+    <form action="/reply/{{ reply.reply_id}}/edit" method="post" style="width:500px;">
+        <h1>Your Reponse</h1>
+      
+
+        <div class="mt-3 form-group">
+            <label for="exampleFormControlTextarea1">Reply</label>
+            <textarea class="form-control" id="reply_body" name="reply_body">{{ reply.main_text }}</textarea>
+        </div>
+
+            <button type="submit" class="btn-post btn btn-primary">Post</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

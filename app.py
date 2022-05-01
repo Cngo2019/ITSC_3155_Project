@@ -367,5 +367,29 @@ def load_replies(account_id):
         reply_info['post_question'] = post_question
         reply_info['response'] = reply.main_text
         reply_info['date'] = reply.date_time
+        reply_info['reply_id'] = reply.reply_id
         my_replies.append(reply_info)
     return render_template("my_replies.html", my_replies = my_replies)
+
+@app.get('/reply/<reply_id>/edit')
+def edit_reply(reply_id):
+    current_reply = Reply.query.filter_by(reply_id=reply_id).first()
+    return render_template('edit_reply_form.html', reply=current_reply)
+
+@app.post('/reply/<reply_id>/edit')
+def update_reply(reply_id):
+    updated_text = request.form.get('reply_body')
+    current_reply = Reply.query.filter_by(reply_id=reply_id).first()
+    current_reply.main_text = updated_text
+    db.session.commit()
+
+    user_id = current_reply.account_id
+    return redirect(f'/user_replies/{user_id}')
+
+@app.post('/reply/<reply_id>/delete')
+def delete_reply(reply_id):
+    reply_to_delete = Reply.query.filter_by(reply_id=reply_id).first()
+    user_id = reply_to_delete.account_id
+    db.session.delete(reply_to_delete)
+    db.session.commit()
+    return redirect(f'/user_replies/{user_id}') 
