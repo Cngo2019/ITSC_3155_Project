@@ -50,7 +50,7 @@
         </b>
         <p>My Response: {{ reply.response }}</p>
         <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
-
+        <button onclick="location.href='/reply/{{ reply.reply_id }}';" class="btn btn-primary">View</button>
 
     <form action="/reply/{{ reply.reply_id }}/delete" method="post" style="margin-top:20px;">
         <button class="btn btn-danger">Delete</button>

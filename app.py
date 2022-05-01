@@ -414,11 +414,21 @@ def view_replies_for_specific_post(post_id):
         reply_info['reply_id'] = reply.reply_id
         my_replies.append(reply_info)
     return render_template("my_replies.html", my_replies = my_replies)
+@app.get('/reply/<reply_id>')
+def view_reply(reply_id):
+    my_reply = Reply.query.filter_by(reply_id=reply_id).first()
+    return render_template("my_reply.html", reply=my_reply)
+
 
 @app.post('/post_search')
 def posts_by_title():
     # This code was referenced from the SQLAlchemy flask assignment where we had to implement a function to search for movies -Can
-    movie_title = request.form.get('title')
-    title = f'%{movie_title}%'
+    # Obtain the movie title
+    post_title = request.form.get('title')
+    # pass this into the query (adding the percent signs appears to be reflect a regular expression)
+    title = f'%{post_title}%'
+    # query based on the title. As long as the title contains anything related to the 'title' string then let it be a search result.
     all_posts = Post.query.filter(Post.title.ilike(title)).all()
-    return render_template('view_all.html', all_posts=all_posts, user=session['user'])
+    if all_posts:
+        return render_template('view_all.html', all_posts=all_posts, user=session['user'])
+    return render_template('no_posts.html')
