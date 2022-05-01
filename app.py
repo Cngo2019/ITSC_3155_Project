@@ -355,6 +355,7 @@ def about():
 
 @app.get('/user_replies/<account_id>')
 def load_replies(account_id):
+    all_replies = 1
     # get user's account ID
     account_id = User.query.filter_by(username=session['user']).first().account_id
     my_replies = []
@@ -370,8 +371,9 @@ def load_replies(account_id):
         reply_info['response'] = reply.main_text
         reply_info['date'] = reply.date_time
         reply_info['reply_id'] = reply.reply_id
+        reply_info['post_id'] = reply.post_id
         my_replies.append(reply_info)
-    return render_template("my_replies.html", my_replies = my_replies)
+    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies)
 
 @app.get('/reply/<reply_id>/edit')
 def edit_reply(reply_id):
@@ -398,6 +400,7 @@ def delete_reply(reply_id):
 
 @app.get('/my_replies/<post_id>')
 def view_replies_for_specific_post(post_id):
+    all_replies = 0
     my_replies = []
     # Get user's acc id
     user_id = User.query.filter_by(username=session['user']).first().account_id
@@ -412,8 +415,9 @@ def view_replies_for_specific_post(post_id):
         reply_info['response'] = reply.main_text
         reply_info['date'] = reply.date_time
         reply_info['reply_id'] = reply.reply_id
+        reply_info['post_id'] = reply.post_id
         my_replies.append(reply_info)
-    return render_template("my_replies.html", my_replies = my_replies)
+    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies)
 @app.get('/reply/<reply_id>')
 def view_reply(reply_id):
     my_reply = Reply.query.filter_by(reply_id=reply_id).first()
