@@ -117,14 +117,18 @@
                         <a class="nav-link" href="/create">Post a Question</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
+                        <a class="nav-link" href="/about">About</a>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="/my_account">My Account</a>
+                      </li>
 
                 </ul>
                 <div class="search-bar">
-                    <form class="d-flex">
+                    <form class="d-flex" method="post" action="/post_search">
                         <input class="form-control me-2" type="search" placeholder="Search for Question"
-                            aria-label="Search">
+                            aria-label="Search" id="title" name = 'title'>
                         <button class="btn btn-primary me-3" type="submit">Search</button>
                     </form>
                 </div>
@@ -132,8 +136,8 @@
                     <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button"
                         data-bs-toggle="dropdown" aria-expanded="false">{{ user }}</a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="/profile">Your Profile</a></li>
-                        <li><a class="dropdown-item" href="">Your Questions</a></li>
+                        <li><a class="dropdown-item" href="/my_account">Your Profile</a></li>
+                        
                         <li>
                             <hr class="dropdown-divider">
                         </li>

@@ -61,17 +61,23 @@
 <div class="container">
     <img src="{{url_for('static', filename='welcome-home.jpg')}}" alt="bg">
     <div class="welcome-container">
-        <form class="search">
-            <h1>Welcome, {{ user }}</h1>
-            <p>Knowledge is a click away.</p>
-            <input type="search" name="search" class="form-control" id="search" autocomplete="off">
+        <h1>Welcome, {{ user }}</h1>
+        <p>Knowledge is a click away.</p>
+      
+        
             <div class="btns " role="group" aria-label="Basic example">
-                <button type="button" class="btn-search btn btn-primary">Search</button>
-                <a href="/create"type="button" class="btn-post btn btn-primary">Post a Question</a>
                 
+                <form class="d-flex" method="post" action="/post_search">
+                    <input class="form-control me-2" type="search" placeholder="Search for Question"
+                        aria-label="Search" id="title" name = 'title'>
+                    <button class="btn btn-primary me-3" type="submit">Search</button>
+                </form>
+                <a href="/create"type="button" class="btn-post btn btn-primary" style="margin-top:10px;">Post a Question</a>
               </div>
-
+              
         </form>
+
+        
     </div>
 </div>
 

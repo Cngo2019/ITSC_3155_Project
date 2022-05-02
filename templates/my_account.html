@@ -1,0 +1,47 @@
+{% extends '_loggedinlayout.html' %}
+
+{%block body%}
+<div class = "container">
+    <h1>
+        {{current_user.first_name}} {{current_user.last_name}}
+    </h1>
+</div>
+
+<div class="row text-center">
+    <div class="col-md-4 p-5">
+        <h2>Username</h2>
+        <p>{{current_user.username}}</p>
+    </div>
+    <div class="col-md-4 p-5">
+        <h2>Email</h2>
+        <p>{{current_user.email}}</p>
+    </div>
+    <div class="col-md-4 p-5">
+        <h2>User Posts</h2>
+        <p> <a href="/user_posts/{{ current_user.account_id }}">View My Posts</a> </p>
+        <p><a href="/user_replies/{{ current_user.account_id }}">View My Replies</a></p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 p-5">
+        <button id="edit" type="button" class="btn btn-primary">Edit Account Info</button><br/></br>
+        <button id="delete" type="button" class="btn btn-danger">Delete Account</button>
+    </div>   
+</div>
+
+<div class="row">
+    <div class="col-md-6 p-5">
+        
+    </div>   
+</div>
+
+<script type = "text/javascript">
+    document.getElementById("edit").onclick = function () {
+        location.href = "/edit_account.html";
+    };
+    document.getElementById("delete").onclick = function () {
+        location.href = "/delete_account/{{ current_user.account_id }}";
+    };
+</script>
+{%endblock%}

@@ -30,9 +30,6 @@
     .inside-text {
         width: fit-content;
     }
-    h1 {
-        margin-left: 10rem;
-    }
 </style>
 {% endblock %}
 
@@ -43,23 +40,7 @@
 
 
 {% block body %}
-
-<p> 
-    <h1>Homework Feed</h1>
-    {% for current_post in all_posts %}
-    <div class = "post-container">
-        <div class = "inside-text">
-        <b>
-        <p>Subject: {{ current_post.subject_tag }}</p>
-        <p>Title: {{ current_post.title }}</p>
-        </b>
-        <p> <b>Question: </b> {{ current_post.main_text }}</p>
-        </div>
-        <button onclick ="location.href='/create-reply/{{ current_post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
-        <button onclick ="location.href='/post/{{ current_post.post_id }}';" class="btn-view btn btn-primary">View</button>
-    </div>
-    {% endfor %}
-
- 
+<p style="text-align:center;"> 
+    No posts found.
 </p>
 {% endblock %}
