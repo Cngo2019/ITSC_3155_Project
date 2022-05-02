@@ -30,6 +30,9 @@
     .inside-text {
         width: fit-content;
     }
+    h1 {
+        margin-left: 10rem;
+    }
 </style>
 {% endblock %}
 
@@ -40,7 +43,9 @@
 
 
 {% block body %}
+
 <p> 
+    <h1>Homework Feed</h1>
     {% for current_post in all_posts %}
     <div class = "post-container">
         <div class = "inside-text">
