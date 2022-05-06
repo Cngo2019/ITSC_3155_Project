@@ -1,18 +1,19 @@
 {% extends '_loggedinlayout.html' %}
 {% block css %}
 <style>
-    
     .post-container .btn-reply {
         margin-right: 2em;
         margin-top: 2em;
 
     }
+
     .post-container .btn-view {
         margin-top: 2em;
 
-    } 
+    }
+
     .post-container {
-        background:white;
+        background: white;
         border-radius: 10px;
         box-shadow: 0 2px 2px rgb(157, 157, 157);
         margin-left: 10em;
@@ -27,8 +28,43 @@
         margin-left: 10px;
     }
 
-    .inside-text {
-        width: fit-content;
+    .header {
+        display: flex;
+        align-items: center;
+
+    }
+
+    .header h1 {
+        font-size: 20px;
+        align-items: flex-start;
+    }
+
+    
+
+    .header .buttons .btn-edit {
+        margin-right: 10px;
+    }
+    
+    .buttons-details {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        float: right;   
+    }
+
+    .bd-row {
+        display: flex;
+
+    }
+    .edit-btn {
+        margin-right: 10px;
+    }
+    .response p {
+        width:500px;
+        height:50px;
+        word-wrap: break-word;
+        margin-bottom: 2rem;
+        
     }
 </style>
 {% endblock %}
@@ -40,20 +76,45 @@
 
 
 {% block body %}
-<p> 
-    <div class = "post-container">
-        <div class = "inside-text">
-        <p>My Response: {{ reply.main_text }}</p>
-        <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
-        <button onclick="location.href='/reply/{{ reply.reply_id }}';" class="btn btn-primary">View</button>
-
-    <form action="/reply/{{ reply.reply_id }}/delete" method="post" style="margin-top:20px;">
-        <button class="btn btn-danger">Delete</button>
-    </form>
+<p>
+<div class="post-container">
+    <div class="inside-text">
+        <div class="header">
+            <h1>My Response:</h1>
         </div>
+        <div class="buttons-details">
+            <div class="bd-right">
+                <div class="bd-row">
+                    <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';"
+                        class="edit-btn btn btn-primary">
+                        <span class="edit-icon">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </span>
+
+                    </button>
+                    <form action="/reply/{{ reply.reply_id }}/delete" method="post">
+                        <button class="delete-btn btn btn-danger">
+                            <span class="delete-icon">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="response">
+            <p>{{ reply.main_text }}</p>
+        </div>
+
+
     </div>
+</div>
 
 
- 
+
 </p>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}

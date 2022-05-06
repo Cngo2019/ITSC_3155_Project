@@ -173,7 +173,7 @@ def my_account():
 
     if 'user' in session:
         current_user = User.query.filter_by(username=session['user']).first()
-        return render_template('my_account.html', current_user=current_user)
+        return render_template('my_account.html', current_user=current_user,user=session['user'])
     else:
         return redirect('/account_creation')
     
@@ -240,7 +240,7 @@ def delete_post(post_id):
 def user_posts(account_id):
     ###
     all_posts = Post.query.filter_by(account_id=account_id).all()
-    return render_template('view_all.html', all_posts=all_posts)
+    return render_template('view_all.html', all_posts=all_posts,user=session['user'])
 
 @app.get('/edit_account.html')
 def edit_account():
@@ -338,7 +338,7 @@ def password_updated():
 #The  session dictionary was not updated. It must be updated 
 @app.get('/create-reply/<post_id>')
 def create_reply(post_id):
-    return render_template("create_reply.html", post_id=post_id)
+    return render_template("create_reply.html", post_id=post_id, user=session['user'])
 
 @app.post('/reply/<post_id>')
 def add_reply(post_id):
@@ -379,7 +379,7 @@ def load_replies(account_id):
         reply_info['reply_id'] = reply.reply_id
         reply_info['post_id'] = reply.post_id
         my_replies.append(reply_info)
-    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies)
+    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies,user=session['user'])
 
 @app.get('/reply/<reply_id>/edit')
 def edit_reply(reply_id):
@@ -423,11 +423,11 @@ def view_replies_for_specific_post(post_id):
         reply_info['reply_id'] = reply.reply_id
         reply_info['post_id'] = reply.post_id
         my_replies.append(reply_info)
-    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies)
+    return render_template("my_replies.html", my_replies = my_replies, all_replies=all_replies, user=session['user'])
 @app.get('/reply/<reply_id>')
 def view_reply(reply_id):
     my_reply = Reply.query.filter_by(reply_id=reply_id).first()
-    return render_template("my_reply.html", reply=my_reply)
+    return render_template("my_reply.html", reply=my_reply, user=session['user'])
 
 
 @app.post('/post_search')

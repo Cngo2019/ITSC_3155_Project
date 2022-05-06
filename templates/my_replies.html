@@ -1,18 +1,19 @@
 {% extends '_loggedinlayout.html' %}
 {% block css %}
 <style>
-    
     .post-container .btn-reply {
         margin-right: 2em;
         margin-top: 2em;
 
     }
+
     .post-container .btn-view {
         margin-top: 2em;
 
-    } 
+    }
+
     .post-container {
-        background:white;
+        background: white;
         border-radius: 10px;
         box-shadow: 0 2px 2px rgb(157, 157, 157);
         margin-left: 10em;
@@ -30,6 +31,35 @@
     .inside-text {
         width: fit-content;
     }
+
+    .buttons-details {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-top: 2rem;
+    }
+
+    .bd-row {
+        display: flex;
+
+    }
+
+    .right-row {
+        display: flex;
+        align-items: flex-end;
+        margin-top: 2rem;
+        margin-left: 38rem;
+    }
+
+    .edit-btn {
+        margin-right: 10px;
+    }
+    .response p {
+        width:500px;
+        height:60px;
+        word-wrap: break-word;
+        
+    }
 </style>
 {% endblock %}
 
@@ -41,33 +71,64 @@
 
 {% block body %}
 {% if all_replies == 1 %}
-<div class = "post-container">
+<div class="post-container">
     <p> You are currently viewing ALL your replies </p>
 </div>
 {% else %}
-<div class = "post-container">
+<div class="post-container">
     <p> You are currently viewing your replies associated with this post </p>
 </div>
 {% endif %}
-<p> 
+<p>
     {% for reply in my_replies %}
-    <div class = "post-container">
-        <div class = "inside-text">
-        <b>
-        <p> <a href="/post/{{reply.post_id}}">Post Title : {{ reply.post_title }}</a> </p>
-        <p>Post Question : {{ reply.post_question }}</p>
-        </b>
-        <p>My Response: {{ reply.response }}</p>
-        <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';" class="btn btn-primary">Edit</button>
-        <button onclick="location.href='/reply/{{ reply.reply_id }}';" class="btn btn-primary">View</button>
+<div class="post-container">
+    <div class="inside-text">
 
-    <form action="/reply/{{ reply.reply_id }}/delete" method="post" style="margin-top:20px;">
-        <button class="btn btn-danger">Delete</button>
-    </form>
+        <b>
+            <p> <a href="/post/{{reply.post_id}}">Post Title : {{ reply.post_title }}</a> </p>
+            <p>Post Question : {{ reply.post_question }}</p>
+        </b>
+        <div class="response">
+            <p>My Response: {{ reply.response }}</p>
+        </div>
+
+        <div class="buttons-details">
+            <div class="bd-left">
+                <div class="bd-row">
+                    <button onclick="location.href='/reply/{{ reply.reply_id }}';" class="btn-view btn btn-primary">
+                        <span class="view-icon">
+                            <ion-icon name="eye-outline"></ion-icon>
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <div class="bd-right">
+                <div class="right-row">
+                    <button onclick="location.href='/reply/{{ reply.reply_id }}/edit';"
+                        class="edit-btn btn btn-primary">
+                        <span class="edit-icon">
+                            <ion-icon name="create-outline"></ion-icon>
+                        </span>
+
+                    </button>
+
+                    <form action="/reply/{{ reply.reply_id }}/delete" method="post">
+                        <button class="delete-btn btn btn-danger">
+                            <span class="delete-icon">
+                                <ion-icon name="trash-outline"></ion-icon>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-    {% endfor %}
+</div>
+{% endfor %}
 
- 
+
 </p>
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}

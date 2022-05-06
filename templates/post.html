@@ -1,17 +1,16 @@
 {% extends '_loggedinlayout.html' %}
 {% block css %}
 <style>
-   
     .post-text {
-        color:black;
-        margin-left:10px;
+        color: black;
+        margin-left: 10px;
     }
+
     .inside-text {
         width: fit-content;
     }
-    
-    .post-container {
-        background:white;
+    .note-container {
+        background: white;
         border-radius: 10px;
         box-shadow: 0 2px 2px rgb(157, 157, 157);
         margin-left: 10em;
@@ -20,8 +19,46 @@
         width: 800px;
         margin-bottom: 10px;
     }
+    .post-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 10px;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
     
-
+    .post-container h2 {
+        margin-bottom: 15px;
+    }
+    .solutions-header {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2em;
+        
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    .reply-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2px;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    .reply-container #reply {
+        width:500px;
+        height:60px;
+        word-wrap: break-word;
+    }
 </style>
 {% endblock %}
 {% block nav %}
@@ -29,25 +66,39 @@
 {% endblock %}
 {% block body %}
 {% if hasReplies == 1 %}
-<div class = "post-container">
-    <p> You have replies associated with this post! <a href="/my_replies/{{ post.post_id }}">Click here to view them</a> </p>
+<div class="note-container">
+    <p> You have replies associated with this post! <a href="/my_replies/{{ post.post_id }}">Click here to view them</a>
+    </p>
 </div>
 {% endif %}
-    <div class = "post-container">
-        <b>
-        <p> Subject: {{ post.subject_tag }}</p>
-        <p> Title: {{ post.title }}<p>
-        <p> {{ post.date_time }}<p>
+<div class="post-container">
+    <h2>Question</h2>
+    <b>
         <p> Posted By: {{ username }}</p>
-        </b>
-        <p> Question: {{ post.main_text }}</p>
-        <button onclick ="location.href='/create-reply/{{ post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
-    </div>
-   
-    {% for associated_reply in replies %}
-    <div class= "post-container">
-        <p> <b>User {{ associated_reply.username }} responded with: </b> </p>
-        <p> {{ associated_reply.main_text }}</p>
-    </div>
-    {% endfor %}
+        <p> Subject: {{ post.subject_tag }}</p>
+        <p> Title: {{ post.title }}</p>
+        
+        <p> {{ post.date_time }}</p>
+        
+    </b>
+    <p> Question: {{ post.main_text }}</p>
+    <button onclick="location.href='/create-reply/{{ post.post_id }}';" class="btn-view btn btn-primary">
+        <span class="reply-icon">
+            <ion-icon class="reply" name="arrow-redo-outline"></ion-icon>
+        </span>
+    </button>
+</div>
+<div class="solutions-header">
+    <h2>Solutions</h2>
+</div>
+
+{% for associated_reply in replies %}
+<div class="reply-container">
+    <p> <b>User {{ associated_reply.username }} responded with: </b> </p>
+    <p id="reply"> {{ associated_reply.main_text }}</p>
+</div>
+{% endfor %}
+
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}
