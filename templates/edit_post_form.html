@@ -15,9 +15,31 @@
         background-color: none;
         
     }
-    #post_body {
-        width:100px;
-        height:500px;
+    
+    .edit-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        
+        margin-bottom: 10px;
+    }
+    .edit-container form textarea {
+        width:31.3rem;
+        height: 10rem;
+    }
+    .edit-container .form-select {
+        height:2.7rem;
+
+    }
+    .edit-container .btn-update {
+        margin-top: 2em;
+    }
+    .edit-container form .form-select {
+        margin-bottom: 1rem;
     }
 </style>
 {% endblock %}
@@ -27,9 +49,9 @@
 
 {% block body %}
 <!--Send this information to the route "obtain_post_info" using the post method-->
-<div style="margin-left: 10px;">
+<div class="edit-container">
     <form action="/post/{{ post.post_id }}" method = "post" style="width:500px;">
-        
+        <h1>Edit Post</h1>
 
         <select class="form-select form-select-sm" aria-label=".form-select-sm example" name = "post_subject">
             <option selected>{{post.subject_tag}}</option>
@@ -47,7 +69,7 @@
             <textarea class="form-control" id="post_body" name = "post_body"> {{ post.main_text }} </textarea>
         </div>
 
-            <button type="submit" class ="btn btn-primary">Update</button>
+            <button type="submit" class ="btn-update btn btn-primary">Update</button>
         </div>
     </form>
 </div>

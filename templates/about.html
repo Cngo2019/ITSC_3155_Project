@@ -2,42 +2,70 @@
 
 {% block css %}
 <style>
-    h1 {
+    .heading {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 17.5em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    .heading h1 {
         text-align: center;
-        padding-top: 50px;
-        font-size: larger;
+    }
+    .motto {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 17.5em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    .motto h2 {
+        text-align: left;
+    }
+    .motto p {
+        text-align: left;
+    }
+    
+    .creators {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 17.5em;
+        margin-top: 2em;
+        padding: 2em 2em 2em 2em;
+        width: 800px;
+        margin-bottom: 10px;
     }
 
-    h3 {
-        padding-top: 20px;
-        margin-left: 100px;
-        margin-right: 100px;
-        font-size: medium;
-    }
-
-    p {
-        padding-top: 20px;
-        margin-left: 100px;
-        margin-right: 100px;
-        font-size: medium;
-    }
 </style>
 
 {% endblock %}
 
 
 {% block body %}
-
-
-<h1>About us</h1>
-<h3>Homework Help is dedicated to providing exceptional solutions to various homework related questions.</h3>
-<p>
-    At Homework Help, we are assisting millions of students through our easy to use interface. With an active
-    community of over 25 million registered accounts, we are able to provide quaility and accuracy for free. Start helping
-    yourself and others today!
-</p>
-<br>
-<h1>Our creators</h1>
+<div class="about-container">
+    <div class="heading">
+        <h1>About HomeworkHelp</h1>
+        
+    </div>
+    <div class="motto">
+        <h2>What we do</h2>
+        <p>Homework Help is dedicated to providing exceptional solutions to various homework related questions.</p>
+        <p>At Homework Help, we are assisting millions of students through our easy to use interface. With an active
+            community of over 25 million registered accounts, we are able to provide quaility and accuracy for free. Start helping
+            yourself and others today!</p>
+    </div>
+    
+    <div class="creators">
+        <h2>Our Creators</h2>
+    </div>
+</div>
 
 
 

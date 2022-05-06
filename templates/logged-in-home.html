@@ -3,49 +3,53 @@
 {% block css %}
 
 <style>
-    
     img {
-        background-repeat:no-repeat;
+        background-repeat: no-repeat;
         background-size: cover;
-        margin:0;
-        padding:0;
+        margin: 0;
+        padding: 0;
         width: 100%;
     }
 
     .welcome-container {
         width: 50rem;
         height: 15rem;
-        background: rgb(185, 185, 185);
+        background: rgb(255, 255, 255);
         color: rgb(0, 0, 0);
         top: 15%;
         left: 20%;
         position: absolute;
         padding: 30px 30px 30px 30px;
         border-radius: 25px;
-        
-        
+        margin-top: 0;
     }
+
+    .welcome-img {
+        border-radius: 0 0 25px 25px;
+    }
+
     .welcome-container h1 {
         text-align: center;
     }
+
     .welcome-container p {
         font-size: 25px;
         text-align: center;
     }
-    .welcome-container .search input {
-        width: 30rem;
-        margin-left:130px;
-        
-    }
-    .btns .btn-search {
-        margin-left: 16rem;
-        margin-top: .5rem;
-        
-    }
-    .btns .btn-post {
-        margin-top: .5rem;
-    }
 
+    
+    .search-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-around;
+        margin-left: 1.2rem;
+        
+    }
+    .search-row form input{
+        width:30rem;
+        
+    }
+    
 </style>
 
 {% endblock %}
@@ -59,27 +63,28 @@
 
 
 <div class="container">
-    <img src="{{url_for('static', filename='welcome-home.jpg')}}" alt="bg">
+    <img src="{{url_for('static', filename='welcome-home.jpg')}}" class="welcome-img" alt="bg">
     <div class="welcome-container">
         <h1>Welcome, {{ user }}</h1>
         <p>Knowledge is a click away.</p>
-      
-        
-            <div class="btns " role="group" aria-label="Basic example">
-                
+        <div class="d-flex" role="group" aria-label="Basic example">
+            <div class="search-row">
                 <form class="d-flex" method="post" action="/post_search">
-                    <input class="form-control me-2" type="search" placeholder="Search for Question"
-                        aria-label="Search" id="title" name = 'title'>
-                    <button class="btn btn-primary me-3" type="submit">Search</button>
+                    <input class="input-search form-control me-1" type="search" placeholder="Search for Question" aria-label="Search"
+                        id="title" name='title'>
+                    <button class="search-btn btn btn-primary me-1" type="submit">Search</button>
                 </form>
-                <a href="/create"type="button" class="btn-post btn btn-primary" style="margin-top:10px;">Post a Question</a>
-              </div>
-              
-        </form>
+                <a href="/create" type="button" class="post-btn btn btn-primary">Post a
+                    Question</a>
+            </div>
+        </div>
 
-        
+
     </div>
 </div>
+
+
+
 
 
 

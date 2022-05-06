@@ -30,9 +30,17 @@
     .inside-text {
         width: fit-content;
     }
-    h1 {
-        margin-left: 10rem;
+    
+    .header {
+        background:white;
+        border-radius: 10px;
+        box-shadow: 0 2px 2px rgb(157, 157, 157);
+        margin-left: 10em;
+        padding: 10px 0 10px 1rem;
+        width: 800px;
+        
     }
+    
 </style>
 {% endblock %}
 
@@ -45,7 +53,9 @@
 {% block body %}
 
 <p> 
+    <div class="header" >
     <h1>Homework Feed</h1>
+    </div>
     {% for current_post in all_posts %}
     <div class = "post-container">
         <div class = "inside-text">
@@ -55,11 +65,21 @@
         </b>
         <p> <b>Question: </b> {{ current_post.main_text }}</p>
         </div>
-        <button onclick ="location.href='/create-reply/{{ current_post.post_id }}';" class="btn-view btn btn-primary">Reply</button>
-        <button onclick ="location.href='/post/{{ current_post.post_id }}';" class="btn-view btn btn-primary">View</button>
+        <button onclick ="location.href='/create-reply/{{ current_post.post_id }}';" class="btn-view btn btn-primary">
+            <span class="reply-icon">
+                <ion-icon name="arrow-redo-outline"></ion-icon>
+            </span>
+        </button>
+        <button onclick ="location.href='/post/{{ current_post.post_id }}';" class="btn-view btn btn-primary">
+            <span class="view-icon">
+                <ion-icon name="eye-outline"></ion-icon>
+            </span>
+        </button>
     </div>
     {% endfor %}
 
- 
+
 </p>
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 {% endblock %}
