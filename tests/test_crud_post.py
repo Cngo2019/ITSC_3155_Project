@@ -40,11 +40,6 @@ def test_post_creation(client):
         assert b'This is a testing post' in response.data
         response = client.get('/post/1')
         assert b'This is the body of the post' in response.data
-
-        # Go ahead and send a post request to the reply/1 so it can attach the reply_body to post with ID # 1
-        #client.post('/reply/1', data={'reply_body':'1x2czy89gmichaeljolin22222111'})
-        #response = client.get('/post/1')
-       # assert b'1x2czy89gmichaeljolin22222111' in response.data
 def test_post_update(client):
     #post_title = request.form.get('post_title')
     #post_body = request.form.get('post_body')
