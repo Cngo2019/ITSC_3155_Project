@@ -1,5 +1,4 @@
-# THIS TESTING MODULE is used to just test out how to create replies, posts, and accounts.
-def test_reply_creation(client):
+def test_reply_creation_update(client):
     # LETS HAVE THE USER CREATE AN ACCOUNT AND THEN CHECK IF THEY CAN LOG IN
     with client:
         client.post("/account_creation", data={
@@ -28,6 +27,7 @@ def test_reply_creation(client):
             })
         # Create a reply by Jsmith99
         client.post("/login", data={"username": "Jsmith99", "password": "123"})
+        # Sned the reply update info to /reply/2
         client.post('/reply/2', data={'reply_body':'1x2czy89gmichaeljolin22222111'})
         # Go to the post now.
         response = client.get('/post/2')
@@ -35,8 +35,8 @@ def test_reply_creation(client):
         assert b'Jsmith99 responded with:' in response.data
         assert b'Jsmith33' in response.data
         client.post('/logout')
-
-def test_reply_update(client):
+# Test to make sure we can actually delete the reply
+def test_reply_deletion(client):
     with client:
         client.post("/login", data={"username": "Jsmith99", "password": "123"})
         client.post("/reply/1/delete")
