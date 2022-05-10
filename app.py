@@ -9,7 +9,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('CLEARDB_DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = os.getenv('SECRET_KEY')
 
@@ -338,7 +338,8 @@ def password_updated():
 #The  session dictionary was not updated. It must be updated 
 @app.get('/create-reply/<post_id>')
 def create_reply(post_id):
-    return render_template("create_reply.html", post_id=post_id, user=session['user'])
+    current_post = Post.query.get_or_404(post_id)
+    return render_template("create_reply.html", post_id=post_id, user=session['user'], post=current_post)
 
 @app.post('/reply/<post_id>')
 def add_reply(post_id):
